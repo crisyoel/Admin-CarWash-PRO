@@ -689,25 +689,40 @@ function removeAsociacionVehiculo(cliente, placa) {
     cliente.vehiculos = cliente.vehiculos.filter(p => p !== String(placa).trim().toUpperCase());
 }
 
-function saveData() {
-    // Guardar primero en el teléfono: un fallo de red no debe perder cambios.
-    try {
-        localStorage.setItem(STORAGE_KEY, JSON.stringify(appData));
-    } catch (error) {
-        console.error('No se pudo guardar la copia local:', error);
-        alert('No se pudo guardar en este teléfono. Revisa el espacio disponible.');
-        return;
-    }
-
+/* ==================================================
+   SECCIÓN: GUARDADO DE DATOS EN SUPABASE (NUBE)
+   ================================================== */
+async function saveData() {
     updateUI();
     actualizarDisplayCajaBase();
 
-    // La nube se actualiza en segundo plano; nunca inserta filas nuevas ni
-    // reemplaza appData con una respuesta remota en esta función.
-    guardarDatosEnSupabase().catch(error => {
-        console.error('Error inesperado al guardar en Supabase:', error);
-    });
+    try {
+        const { data: sesionData } = await supabaseClient.auth.getSession();
+        const usuario = sesionData?.session?.user;
+        if (!usuario) {
+            console.warn("⚠️ No hay usuario autenticado en Supabase para guardar.");
+            return;
+        }
+
+        // Guardamos directamente en la tabla app_data de Supabase
+        const { error } = await supabaseClient
+            .from('app_data')
+            .upsert({
+                user_id: usuario.id,
+                data: appData,
+                schema_version: 3
+            }, { onConflict: 'user_id' });
+
+        if (error) {
+            console.error("Error al guardar en Supabase:", error);
+        } else {
+            console.log('☁️ Datos guardados exitosamente en la nube.');
+        }
+    } catch (e) {
+        console.error("Error inesperado al guardar en Supabase:", e);
+    }
 }
+
 
 async function guardarDatosEnSupabase() {
     try {
