@@ -7,7 +7,7 @@
    CONTROL DE VERSIÓN OFICIAL - VERSIÓN 3.0 PRO
    ================================================== */
 const STORAGE_KEY = 'admin_carwash_data_v3';
-const SCRIPT_VERSION = 'v3.0.0-pro-supabase';
+const SCRIPT_VERSION = 'v3-19oct2026';
 
 
 /* ==================================================
@@ -15,57 +15,6 @@ const SCRIPT_VERSION = 'v3.0.0-pro-supabase';
    Reemplaza la alerta nativa del navegador por un modal
    visual consistente con el diseño de la aplicación.
    ================================================== */
-/* ==================================================
-   VENTANA DE CONFIRMACIÓN ESTILO NATIVO (IDÉNTICO A CAJA CERRADA)
-   ================================================== */
-function showAppConfirm(message, onConfirm) {
-    let modal = document.getElementById('appConfirmModal');
-    
-    if (!modal) {
-        modal = document.createElement('div');
-        modal.id = 'appConfirmModal';
-        modal.className = 'app-alert-overlay'; // Usa la misma capa oscura de tus modales
-        modal.innerHTML = `
-            <div class="app-alert-card" role="dialog" aria-modal="true" style="text-align: center;">
-                <div class="app-alert-icon" style="background: rgba(239, 68, 68, 0.1); color: #ef4444; margin: 0 auto 16px auto;">
-                    <i class="fa-solid fa-triangle-exclamation"></i>
-                </div>
-                <div class="app-alert-title" style="margin-bottom: 8px;">Atención</div>
-                <div class="app-alert-message" id="appConfirmMessage" style="margin-bottom: 24px; color: #64748b;"></div>
-                <div style="display: flex; gap: 12px; width: 100%;">
-                    <button type="button" id="appConfirmCancelBtn" class="btn" style="flex: 1; background: #f1f5f9; color: #334155; border: none; padding: 12px; border-radius: 8px; font-weight: 600; cursor: pointer;">Cancelar</button>
-                    <button type="button" id="appConfirmOkBtn" class="btn" style="flex: 1; background: #0284c7; color: white; border: none; padding: 12px; border-radius: 8px; font-weight: 600; cursor: pointer;">Confirmar</button>
-                </div>
-            </div>`;
-        document.body.appendChild(modal);
-    }
-
-    const msgElement = document.getElementById('appConfirmMessage');
-    if (msgElement) msgElement.textContent = String(message ?? '');
-    
-    modal.classList.add('open');
-
-    const okBtn = document.getElementById('appConfirmOkBtn');
-    const cancelBtn = document.getElementById('appConfirmCancelBtn');
-
-    // Limpiamos eventos anteriores clonando los botones
-    const newOkBtn = okBtn.cloneNode(true);
-    const newCancelBtn = cancelBtn.cloneNode(true);
-    okBtn.parentNode.replaceChild(newOkBtn, okBtn);
-    cancelBtn.parentNode.replaceChild(newCancelBtn, cancelBtn);
-
-    newOkBtn.addEventListener('click', () => {
-        modal.classList.remove('open');
-        if (typeof onConfirm === 'function') onConfirm();
-    });
-
-    newCancelBtn.addEventListener('click', () => {
-        modal.classList.remove('open');
-    });
-}
-
-
-
 function showAppAlert(message) {
     let modal = document.getElementById('appAlertModal');
 
@@ -532,131 +481,63 @@ let montoModificadoManual = false;
 /* ==================================================
    SECCIÓN: CARGA Y GUARDADO DE DATOS
    ================================================== */
+
 function loadData() {
-    let stored = null;
-    const VERSIONES_ANTERIORES = [STORAGE_KEY, 'car_wash_admin_data_v3_1', 'car_wash_admin_data_v3_0', 'car_wash_admin_data_v2_0', 'car_wash_admin_data_v3_0_pro'];
-    for (const clave of VERSIONES_ANTERIORES) {
-        const datos = localStorage.getItem(clave);
-        if (datos) { stored = datos; break; }
+    const stored = localStorage.getItem(STORAGE_KEY);
+
+    if (!stored) {
+        return getDefaultData();
     }
-    if (stored) {
-        try {
-            let data = JSON.parse(stored);
-            if(!data.inventario) data.inventario = getDefaultData().inventario;
-            if(!data.gastos) data.gastos = [];
-            if(!data.ingresosExtras) data.ingresosExtras = [];
-            if(!data.pagosLavadores) data.pagosLavadores = [];
-            if(!data.vehiculosRegistry) data.vehiculosRegistry = {};
-            if(data.cajaCerrada === undefined) data.cajaCerrada = false;
-            data.cajaBase = parseFloat(data.cajaBase) || 0.00;
-            if(!data.lavadores) data.lavadores = [];
-            if(!data.clientes || data.clientes.length === 0) data.clientes = getDefaultData().clientes;
-            if (!data.clientes.find(c => c.name === 'Cliente General')) {
-                data.clientes.unshift({ id: 'cli_general', name: 'Cliente General', phone: '6000-0000', descuento: 0, vehiculos: [], frecuente: false, protegido: true });
-            } else {
-                const general = data.clientes.find(c => c.name === 'Cliente General');
-                general.id = general.id || 'cli_general';
-                general.descuento = parseFloat(general.descuento) || 0;
-                general.vehiculos = Array.isArray(general.vehiculos) ? general.vehiculos : [];
-                general.protegido = true;
-            }
 
-            data.clientes.forEach((c, i) => {
-                c.id = c.id || ('cli_' + Date.now().toString(36) + '_' + i + '_' + Math.random().toString(36).slice(2, 7));
-                c.name = (c.name || 'Cliente sin nombre').trim();
-                c.phone = c.phone || '';
-                c.descuento = Math.max(0, parseFloat(c.descuento) || 0);
-                c.vehiculos = Array.isArray(c.vehiculos) ? c.vehiculos.map(p => String(p).trim().toUpperCase()).filter(Boolean) : [];
+    try {
+        const data = JSON.parse(stored);
+        const defaults = getDefaultData();
+
+        if (!data || typeof data !== 'object') {
+            return defaults;
+        }
+
+        if (!Array.isArray(data.lavadores)) data.lavadores = [];
+        if (!Array.isArray(data.clientes)) data.clientes = defaults.clientes;
+        if (!Array.isArray(data.registros)) data.registros = [];
+        if (!Array.isArray(data.inventario)) data.inventario = defaults.inventario;
+        if (!Array.isArray(data.gastos)) data.gastos = [];
+        if (!Array.isArray(data.ingresosExtras)) data.ingresosExtras = [];
+        if (!Array.isArray(data.pagosLavadores)) data.pagosLavadores = [];
+        if (!data.vehiculosRegistry || typeof data.vehiculosRegistry !== 'object') {
+            data.vehiculosRegistry = {};
+        }
+
+        if (data.cajaBase === undefined) data.cajaBase = 0;
+        if (data.cajaCerrada === undefined) data.cajaCerrada = false;
+
+        if (!data.clientes.some(c => c.name === 'Cliente General')) {
+            data.clientes.unshift({
+                id: 'cli_general',
+                name: 'Cliente General',
+                phone: '6000-0000',
+                descuento: 0,
+                vehiculos: [],
+                frecuente: false,
+                protegido: true
             });
+        }
 
-            if (data.registros && data.registros.length > 0) {
-                const historialTemporal = {};
-                data.registros = data.registros.map(r => {
-                    if (r.tipoRegistro === 'EXPRESS') {
-                        return {
-                            ...r,
-                            id: r.id || 'rec_' + Math.random().toString(36).slice(2),
-                            auto: (r.auto || r.placa || '').trim().toUpperCase(),
-                            pista: r.pista === 'Fuera' ? 'Fuera' : (r.pista || ''),
-                            estadoPago: r.estadoPago || 'PENDIENTE',
-                            serviciosArray: r.serviciosArray || (r.servicio ? [r.servicio] : ['Completo']),
-                            servicio: r.servicio || (r.serviciosArray ? r.serviciosArray.join(' + ') : 'Completo'),
-                            monto: parseFloat(r.monto) || 0,
-                            propina: parseFloat(r.propina) || 0,
-                            descuento: Math.max(0, parseFloat(r.descuento) || 0),
-                            clienteId: r.clienteId || '',
-                            clienteNombre: r.clienteNombre || r.clienteName || '',
-                            fecha: r.fecha || new Date().toLocaleDateString(),
-                            timestamp: r.timestamp || new Date().toLocaleTimeString([], { hour: '2-digit', minute: '2-digit' })
-                        };
-                    }
+        const general = data.clientes.find(c => c.name === 'Cliente General');
+        general.id = general.id || 'cli_general';
+        general.descuento = parseFloat(general.descuento) || 0;
+        general.vehiculos = Array.isArray(general.vehiculos) ? general.vehiculos : [];
+        general.protegido = true;
 
-                    let placaClean = (r.auto || r.placa || 'SIN-PLACA').trim().toUpperCase();
-                    let pistaClean = r.pista === 'Fuera' ? 'Fuera' : (r.pista || '');
-                    const regLimpio = {
-                        ...r,
-                        id: r.id || 'rec_' + Math.random().toString(36).slice(2),
-                        auto: placaClean,
-                        pista: pistaClean,
-                        estadoPago: r.estadoPago || 'PENDIENTE',
-                        serviciosArray: r.serviciosArray || (r.servicio ? [r.servicio] : ['Completo']),
-                        servicio: r.servicio || (r.serviciosArray ? r.serviciosArray.join(' + ') : 'Completo'),
-                        monto: parseFloat(r.monto) || 0,
-                        propina: parseFloat(r.propina) || 0,
-                        descuento: Math.max(0, parseFloat(r.descuento) || 0),
-                        clienteId: r.clienteId || '',
-                        clienteNombre: r.clienteNombre || r.clienteName || '',
-                        fecha: r.fecha || new Date().toLocaleDateString(),
-                        timestamp: r.timestamp || new Date().toLocaleTimeString([], { hour: '2-digit', minute: '2-digit' })
-                    };
-                    if (!historialTemporal[placaClean]) historialTemporal[placaClean] = [];
-                    historialTemporal[placaClean].push({
-                        id: regLimpio.id, fecha: regLimpio.fecha, timestamp: regLimpio.timestamp,
-                        servicio: regLimpio.servicio, serviciosArray: regLimpio.serviciosArray,
-                        monto: regLimpio.monto, propina: regLimpio.propina, lavador: regLimpio.lavador, pista: regLimpio.pista,
-                        formaPago: regLimpio.formaPago, estadoPago: regLimpio.estadoPago
-                    });
-                    if (!data.vehiculosRegistry[placaClean]) {
-                        data.vehiculosRegistry[placaClean] = {
-                            placa: placaClean, marca: r.marca || '', modelo: r.modelo || '',
-                            color: r.color || '', tipoVehiculo: r.tipoVehiculo || 'SEDAN',
-                            propietario: r.clienteName || r.propietario || 'Cliente General', telefono: r.telefono || '6000-0000',
-                            frecuente: r.frecuente || false, observaciones: r.observaciones || '',
-                            historialVisitas: []
-                        };
-                    }
-                    return regLimpio;
-                });
-                Object.keys(historialTemporal).forEach(placa => {
-                    if (data.vehiculosRegistry[placa]) {
-                        data.vehiculosRegistry[placa].historialVisitas = historialTemporal[placa]
-                            .sort((a,b) => new Date(a.fecha + ' ' + a.timestamp) - new Date(b.fecha + ' ' + b.timestamp));
-                    }
-                });
-            }
-            // Vincula de forma segura datos antiguos con clientes por nombre/propietario,
-            // sin crear descuentos retroactivos ni modificar la matemática histórica.
-            data.clientes.forEach(cliente => {
-                normalizarClienteVehiculos(cliente);
-                Object.values(data.vehiculosRegistry).forEach(v => {
-                    if ((v.propietario || '').trim().toLowerCase() === (cliente.name || '').trim().toLowerCase()) {
-                        guardarAsociacionVehiculo(cliente, v.placa);
-                    }
-                });
-            });
-            data.registros.forEach(r => {
-                if (!r.clienteId && r.clienteName) {
-                    const cliente = data.clientes.find(c => (c.name || '').trim().toLowerCase() === String(r.clienteName).trim().toLowerCase());
-                    if (cliente) { r.clienteId = cliente.id; r.clienteNombre = cliente.name; }
-                }
-            });
+        data.cajaBase = parseFloat(data.cajaBase) || 0;
 
-            localStorage.setItem(STORAGE_KEY, JSON.stringify(data));
-            return data;
-        } catch(e) { console.error("Error al cargar datos:", e); }
+        return data;
+    } catch (error) {
+        console.error('Error al cargar datos locales:', error);
+        return getDefaultData();
     }
-    return getDefaultData();
 }
+
 
 /* ==================================================
    SECCIÓN: SINCRONIZACIÓN INICIAL CON SUPABASE
@@ -763,70 +644,11 @@ function removeAsociacionVehiculo(cliente, placa) {
 }
 
 function saveData() {
-    // Guardar primero en el teléfono: un fallo de red no debe perder cambios.
-    try {
-        localStorage.setItem(STORAGE_KEY, JSON.stringify(appData));
-    } catch (error) {
-        console.error('No se pudo guardar la copia local:', error);
-        alert('No se pudo guardar en este teléfono. Revisa el espacio disponible.');
-        return;
-    }
-
+    localStorage.setItem(STORAGE_KEY, JSON.stringify(appData));
     updateUI();
     actualizarDisplayCajaBase();
 
-    // La nube se actualiza en segundo plano; nunca inserta filas nuevas ni
-    // reemplaza appData con una respuesta remota en esta función.
-    guardarDatosEnSupabase().catch(error => {
-        console.error('Error inesperado al guardar en Supabase:', error);
-    });
-}
-
-async function guardarDatosEnSupabase() {
-    try {
-        if (!window.supabase || !supabaseClient) {
-            console.warn('Supabase no está disponible; los datos siguen guardados localmente.');
-            return false;
-        }
-
-        const { data: sesionData, error: sesionError } =
-            await supabaseClient.auth.getSession();
-
-        if (sesionError) {
-            console.error('No se pudo comprobar la sesión para guardar en Supabase:', sesionError);
-            return false;
-        }
-
-        const usuario = sesionData?.session?.user;
-        if (!usuario) {
-            console.warn('Sin sesión Supabase: cambios guardados solo en el teléfono.');
-            return false;
-        }
-
-        // Actualiza exclusivamente la fila existente del usuario conectado.
-        // Deliberadamente no hace INSERT ni UPSERT para evitar duplicados.
-        const { data, error } = await supabaseClient
-            .from('app_data')
-            .update({ data: appData, schema_version: 3 })
-            .eq('user_id', usuario.id)
-            .select('user_id');
-
-        if (error) {
-            console.error('Error al actualizar datos en Supabase:', error);
-            return false;
-        }
-
-        if (!Array.isArray(data) || data.length === 0) {
-            console.error('Supabase no actualizó ninguna fila. Verifica user_id y las políticas RLS. No se creó una fila nueva.');
-            return false;
-        }
-
-        console.log('Datos guardados en Supabase para el usuario conectado.');
-        return true;
-    } catch (error) {
-        console.error('Error al guardar en Supabase; la copia local se conserva:', error);
-        return false;
-    }
+    guardarDatosEnSupabase();
 }
 
 /* ==================================================
@@ -2832,12 +2654,10 @@ function addLavador(e) {
 
 function deleteLavador(n) {
     if (appData.cajaCerrada) { alert('⚠️ Caja cerrada'); return; }
-    showAppConfirm(`¿Estás seguro de eliminar al lavador "${n}"?`, () => {
-        appData.lavadores = appData.lavadores.filter(l => l !== n); 
-        saveData();
-    });
+    if (!confirm(`¿Eliminar al lavador "${n}"?`)) return;
+    appData.lavadores = appData.lavadores.filter(l => l !== n); 
+    saveData();
 }
-
 
 function renderLavadoresList() {
     const c = document.getElementById('lavadoresListContainer'); 
@@ -3002,18 +2822,18 @@ function verOCopiarReporteCierre() {
    SECCIÓN: REINICIO DE DATOS
    ================================================== */
 function confirmResetData() {
-    showAppConfirm("¿Deseas reiniciar el día y limpiar el acumulado?", () => {
-        appData.registros = [];
-        appData.pagosLavadores = [];
-        appData.gastos = [];
-        appData.ingresosExtras = [];
-        appData.cajaBase = 0;
-        appData.cajaCerrada = false;
-        saveData();
-        location.reload();
-    });
-}
+    if (!confirm("¿Deseas reiniciar el día y limpiar el acumulado de los lavadores?")) return;
 
+    appData.registros = [];
+    appData.pagosLavadores = [];
+    appData.gastos = [];
+    appData.ingresosExtras = [];
+    appData.cajaBase = 0;
+    appData.cajaCerrada = false;
+
+    saveData();
+    location.reload();
+}
 
 /* ==================================================
    SUPABASE: INICIO DE SESIÓN
