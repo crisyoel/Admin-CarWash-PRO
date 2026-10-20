@@ -532,131 +532,58 @@ let montoModificadoManual = false;
 /* ==================================================
    SECCIÓN: CARGA Y GUARDADO DE DATOS
    ================================================== */
+/* ==================================================
+   SECCIÓN: CARGA DE DATOS DESDE SUPABASE (NUBE)
+   ================================================== */
 function loadData() {
-    let stored = null;
-    const VERSIONES_ANTERIORES = [STORAGE_KEY, 'car_wash_admin_data_v3_1', 'car_wash_admin_data_v3_0', 'car_wash_admin_data_v2_0', 'car_wash_admin_data_v3_0_pro'];
-    for (const clave of VERSIONES_ANTERIORES) {
-        const datos = localStorage.getItem(clave);
-        if (datos) { stored = datos; break; }
-    }
-    if (stored) {
+    // Retornamos una estructura base mientras Supabase responde en segundo plano
+    const datosIniciales = {
+        cajaBase: 0.00,
+        lavadores: [], 
+        clientes: [
+            { id: 'cli_general', name: 'Cliente General', phone: '6000-0000', descuento: 0, vehiculos: [], frecuente: false, protegido: true }
+        ],
+        vehiculosRegistry: {},
+        registros: [], 
+        inventario: [
+            { id: 'inv_1', name: 'Shampoo para Autos', stock: 5 },
+            { id: 'inv_2', name: 'Silicona de Tablero', stock: 3 },
+            { id: 'inv_3', name: 'Cera Líquida', stock: 2 },
+            { id: 'inv_4', name: 'Paños Microfibra', stock: 12 }
+        ],
+        gastos: [],
+        ingresosExtras: [],
+        pagosLavadores: [],
+        cajaCerrada: false 
+    };
+
+    // Disparamos la carga asíncrona desde Supabase en segundo plano al iniciar
+    (async () => {
         try {
-            let data = JSON.parse(stored);
-            if(!data.inventario) data.inventario = getDefaultData().inventario;
-            if(!data.gastos) data.gastos = [];
-            if(!data.ingresosExtras) data.ingresosExtras = [];
-            if(!data.pagosLavadores) data.pagosLavadores = [];
-            if(!data.vehiculosRegistry) data.vehiculosRegistry = {};
-            if(data.cajaCerrada === undefined) data.cajaCerrada = false;
-            data.cajaBase = parseFloat(data.cajaBase) || 0.00;
-            if(!data.lavadores) data.lavadores = [];
-            if(!data.clientes || data.clientes.length === 0) data.clientes = getDefaultData().clientes;
-            if (!data.clientes.find(c => c.name === 'Cliente General')) {
-                data.clientes.unshift({ id: 'cli_general', name: 'Cliente General', phone: '6000-0000', descuento: 0, vehiculos: [], frecuente: false, protegido: true });
-            } else {
-                const general = data.clientes.find(c => c.name === 'Cliente General');
-                general.id = general.id || 'cli_general';
-                general.descuento = parseFloat(general.descuento) || 0;
-                general.vehiculos = Array.isArray(general.vehiculos) ? general.vehiculos : [];
-                general.protegido = true;
+            const { data: sesionData } = await supabaseClient.auth.getSession();
+            const usuario = sesionData?.session?.user;
+            if (!usuario) return;
+
+            const { data, error } = await supabaseClient
+                .from('app_data')
+                .select('data')
+                .eq('user_id', usuario.id)
+                .maybeSingle();
+
+            if (!error && data && data.data) {
+                appData = data.data;
+                updateUI();
+                actualizarDisplayCajaBase();
+                console.log('✅ Datos sincronizados desde la nube.');
             }
+        } catch (e) {
+            console.error("Error al cargar desde Supabase:", e);
+        }
+    })();
 
-            data.clientes.forEach((c, i) => {
-                c.id = c.id || ('cli_' + Date.now().toString(36) + '_' + i + '_' + Math.random().toString(36).slice(2, 7));
-                c.name = (c.name || 'Cliente sin nombre').trim();
-                c.phone = c.phone || '';
-                c.descuento = Math.max(0, parseFloat(c.descuento) || 0);
-                c.vehiculos = Array.isArray(c.vehiculos) ? c.vehiculos.map(p => String(p).trim().toUpperCase()).filter(Boolean) : [];
-            });
-
-            if (data.registros && data.registros.length > 0) {
-                const historialTemporal = {};
-                data.registros = data.registros.map(r => {
-                    if (r.tipoRegistro === 'EXPRESS') {
-                        return {
-                            ...r,
-                            id: r.id || 'rec_' + Math.random().toString(36).slice(2),
-                            auto: (r.auto || r.placa || '').trim().toUpperCase(),
-                            pista: r.pista === 'Fuera' ? 'Fuera' : (r.pista || ''),
-                            estadoPago: r.estadoPago || 'PENDIENTE',
-                            serviciosArray: r.serviciosArray || (r.servicio ? [r.servicio] : ['Completo']),
-                            servicio: r.servicio || (r.serviciosArray ? r.serviciosArray.join(' + ') : 'Completo'),
-                            monto: parseFloat(r.monto) || 0,
-                            propina: parseFloat(r.propina) || 0,
-                            descuento: Math.max(0, parseFloat(r.descuento) || 0),
-                            clienteId: r.clienteId || '',
-                            clienteNombre: r.clienteNombre || r.clienteName || '',
-                            fecha: r.fecha || new Date().toLocaleDateString(),
-                            timestamp: r.timestamp || new Date().toLocaleTimeString([], { hour: '2-digit', minute: '2-digit' })
-                        };
-                    }
-
-                    let placaClean = (r.auto || r.placa || 'SIN-PLACA').trim().toUpperCase();
-                    let pistaClean = r.pista === 'Fuera' ? 'Fuera' : (r.pista || '');
-                    const regLimpio = {
-                        ...r,
-                        id: r.id || 'rec_' + Math.random().toString(36).slice(2),
-                        auto: placaClean,
-                        pista: pistaClean,
-                        estadoPago: r.estadoPago || 'PENDIENTE',
-                        serviciosArray: r.serviciosArray || (r.servicio ? [r.servicio] : ['Completo']),
-                        servicio: r.servicio || (r.serviciosArray ? r.serviciosArray.join(' + ') : 'Completo'),
-                        monto: parseFloat(r.monto) || 0,
-                        propina: parseFloat(r.propina) || 0,
-                        descuento: Math.max(0, parseFloat(r.descuento) || 0),
-                        clienteId: r.clienteId || '',
-                        clienteNombre: r.clienteNombre || r.clienteName || '',
-                        fecha: r.fecha || new Date().toLocaleDateString(),
-                        timestamp: r.timestamp || new Date().toLocaleTimeString([], { hour: '2-digit', minute: '2-digit' })
-                    };
-                    if (!historialTemporal[placaClean]) historialTemporal[placaClean] = [];
-                    historialTemporal[placaClean].push({
-                        id: regLimpio.id, fecha: regLimpio.fecha, timestamp: regLimpio.timestamp,
-                        servicio: regLimpio.servicio, serviciosArray: regLimpio.serviciosArray,
-                        monto: regLimpio.monto, propina: regLimpio.propina, lavador: regLimpio.lavador, pista: regLimpio.pista,
-                        formaPago: regLimpio.formaPago, estadoPago: regLimpio.estadoPago
-                    });
-                    if (!data.vehiculosRegistry[placaClean]) {
-                        data.vehiculosRegistry[placaClean] = {
-                            placa: placaClean, marca: r.marca || '', modelo: r.modelo || '',
-                            color: r.color || '', tipoVehiculo: r.tipoVehiculo || 'SEDAN',
-                            propietario: r.clienteName || r.propietario || 'Cliente General', telefono: r.telefono || '6000-0000',
-                            frecuente: r.frecuente || false, observaciones: r.observaciones || '',
-                            historialVisitas: []
-                        };
-                    }
-                    return regLimpio;
-                });
-                Object.keys(historialTemporal).forEach(placa => {
-                    if (data.vehiculosRegistry[placa]) {
-                        data.vehiculosRegistry[placa].historialVisitas = historialTemporal[placa]
-                            .sort((a,b) => new Date(a.fecha + ' ' + a.timestamp) - new Date(b.fecha + ' ' + b.timestamp));
-                    }
-                });
-            }
-            // Vincula de forma segura datos antiguos con clientes por nombre/propietario,
-            // sin crear descuentos retroactivos ni modificar la matemática histórica.
-            data.clientes.forEach(cliente => {
-                normalizarClienteVehiculos(cliente);
-                Object.values(data.vehiculosRegistry).forEach(v => {
-                    if ((v.propietario || '').trim().toLowerCase() === (cliente.name || '').trim().toLowerCase()) {
-                        guardarAsociacionVehiculo(cliente, v.placa);
-                    }
-                });
-            });
-            data.registros.forEach(r => {
-                if (!r.clienteId && r.clienteName) {
-                    const cliente = data.clientes.find(c => (c.name || '').trim().toLowerCase() === String(r.clienteName).trim().toLowerCase());
-                    if (cliente) { r.clienteId = cliente.id; r.clienteNombre = cliente.name; }
-                }
-            });
-
-            localStorage.setItem(STORAGE_KEY, JSON.stringify(data));
-            return data;
-        } catch(e) { console.error("Error al cargar datos:", e); }
-    }
-    return getDefaultData();
+    return datosIniciales;
 }
+
 
 /* ==================================================
    SECCIÓN: SINCRONIZACIÓN INICIAL CON SUPABASE
