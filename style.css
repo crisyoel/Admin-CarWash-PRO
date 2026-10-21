@@ -54,7 +54,7 @@ body {
     max-width: 600px;
     margin: 0 auto;
     padding: 20px;
-    /* Respetar el margen superior del reloj en pantallas con notch/muesca */
+    /* Respetar el margen superior del reloj y la muesca (notch) */
     padding-top: calc(20px + env(safe-area-inset-top, 0px));
     width: 100%;
     flex: 1;
