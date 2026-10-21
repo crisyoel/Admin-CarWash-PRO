@@ -2476,7 +2476,7 @@ function actualizarTickerDescuentos() {
     ticker.classList.remove('fade-in');
     void ticker.offsetWidth;
     ticker.classList.add('fade-in');
-    ticker.textContent = `${item.nombre} — -$${item.monto.toFixed(2)}`;
+    ticker.textContent = `${item.nombre} -$${item.monto.toFixed(2)}`;
 }
 
 function iniciarTickerDescuentos() {
