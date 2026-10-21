@@ -15,6 +15,56 @@ const SCRIPT_VERSION = 'v3-19oct2026';
    Reemplaza la alerta nativa del navegador por un modal
    visual consistente con el diseño de la aplicación.
    ================================================== */
+/* ==================================================
+   VENTANA DE CONFIRMACIÓN ESTILO NATIVO (IDÉNTICO A CAJA CERRADA)
+   ================================================== */
+function showAppConfirm(message, onConfirm) {
+    let modal = document.getElementById('appConfirmModal');
+    
+    if (!modal) {
+        modal = document.createElement('div');
+        modal.id = 'appConfirmModal';
+        modal.className = 'app-alert-overlay'; // Usa la misma capa oscura de tus modales
+        modal.innerHTML = `
+            <div class="app-alert-card" role="dialog" aria-modal="true" style="text-align: center;">
+                <div class="app-alert-icon" style="background: rgba(239, 68, 68, 0.1); color: #ef4444; margin: 0 auto 16px auto;">
+                    <i class="fa-solid fa-triangle-exclamation"></i>
+                </div>
+                <div class="app-alert-title" style="margin-bottom: 8px;">Atención</div>
+                <div class="app-alert-message" id="appConfirmMessage" style="margin-bottom: 24px; color: #64748b;"></div>
+                <div style="display: flex; gap: 12px; width: 100%;">
+                    <button type="button" id="appConfirmCancelBtn" class="btn" style="flex: 1; background: #f1f5f9; color: #334155; border: none; padding: 12px; border-radius: 8px; font-weight: 600; cursor: pointer;">Cancelar</button>
+                    <button type="button" id="appConfirmOkBtn" class="btn" style="flex: 1; background: #0284c7; color: white; border: none; padding: 12px; border-radius: 8px; font-weight: 600; cursor: pointer;">Confirmar</button>
+                </div>
+            </div>`;
+        document.body.appendChild(modal);
+    }
+
+    const msgElement = document.getElementById('appConfirmMessage');
+    if (msgElement) msgElement.textContent = String(message ?? '');
+    
+    modal.classList.add('open');
+
+    const okBtn = document.getElementById('appConfirmOkBtn');
+    const cancelBtn = document.getElementById('appConfirmCancelBtn');
+
+    // Limpiamos eventos anteriores clonando los botones
+    const newOkBtn = okBtn.cloneNode(true);
+    const newCancelBtn = cancelBtn.cloneNode(true);
+    okBtn.parentNode.replaceChild(newOkBtn, okBtn);
+    cancelBtn.parentNode.replaceChild(newCancelBtn, cancelBtn);
+
+    newOkBtn.addEventListener('click', () => {
+        modal.classList.remove('open');
+        if (typeof onConfirm === 'function') onConfirm();
+    });
+
+    newCancelBtn.addEventListener('click', () => {
+        modal.classList.remove('open');
+    });
+}
+
+
 function showAppAlert(message) {
     let modal = document.getElementById('appAlertModal');
 
@@ -2689,9 +2739,10 @@ function addLavador(e) {
 
 function deleteLavador(n) {
     if (appData.cajaCerrada) { alert('⚠️ Caja cerrada'); return; }
-    if (!confirm(`¿Eliminar al lavador "${n}"?`)) return;
-    appData.lavadores = appData.lavadores.filter(l => l !== n); 
-    saveData();
+    showAppConfirm(`¿Estás seguro de eliminar al lavador "${n}"?`, () => {
+        appData.lavadores = appData.lavadores.filter(l => l !== n); 
+        saveData();
+    });
 }
 
 function renderLavadoresList() {
@@ -2857,18 +2908,18 @@ function verOCopiarReporteCierre() {
    SECCIÓN: REINICIO DE DATOS
    ================================================== */
 function confirmResetData() {
-    if (!confirm("¿Deseas reiniciar el día y limpiar el acumulado de los lavadores?")) return;
-
-    appData.registros = [];
-    appData.pagosLavadores = [];
-    appData.gastos = [];
-    appData.ingresosExtras = [];
-    appData.cajaBase = 0;
-    appData.cajaCerrada = false;
-
-    saveData();
-    location.reload();
+    showAppConfirm("¿Deseas reiniciar el día y limpiar el acumulado?", () => {
+        appData.registros = [];
+        appData.pagosLavadores = [];
+        appData.gastos = [];
+        appData.ingresosExtras = [];
+        appData.cajaBase = 0;
+        appData.cajaCerrada = false;
+        saveData();
+        location.reload();
+    });
 }
+
 
 /* ==================================================
    SUPABASE: INICIO DE SESIÓN
