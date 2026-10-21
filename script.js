@@ -7,7 +7,7 @@
    CONTROL DE VERSIÓN OFICIAL - VERSIÓN 3.0 PRO
    ================================================== */
 const STORAGE_KEY = 'admin_carwash_data_v3';
-const SCRIPT_VERSION = 'v3-19oct2026';
+const SCRIPT_VERSION = 'v3-pro-21oct2026';
 
 
 /* ==================================================
@@ -2031,11 +2031,12 @@ function updateUI() {
     if (statRendimientoMasCaja) statRendimientoMasCaja.textContent = `$${totalRendimientoMasCaja.toFixed(2)}`;
 
     if (statPendientesCountCard) {
-        statPendientesCountCard.textContent = appData.registros.filter(r => r.estadoPago === 'PENDIENTE').length;
+        statPendientesCountCard.textContent = `$${montoPendientes.toFixed(2)}`;
     }
 
     if (statPendientesMonto) {
-        statPendientesMonto.textContent = `$${montoPendientes.toFixed(2)} por cobrar`;
+        const totalPendientes = appData.registros.filter(r => r.estadoPago === 'PENDIENTE').length;
+        statPendientesMonto.textContent = `${totalPendientes} auto${totalPendientes === 1 ? '' : 's'} por cobrar`;
     }
 
     const headerTotalBruto = document.getElementById('headerTotalBruto');
