@@ -1,4 +1,4 @@
-const CACHE_NAME = 'carwash-pwa-v3';
+const CACHE_NAME = 'v3-pro-21oct2026';
 const ASSETS = [
   './',
   './index.html',
