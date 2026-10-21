@@ -172,7 +172,7 @@
             </div>
 
             <!-- TARJETA 3: SEGUNDA FILA (2 MÉTRICAS) -->
-            < class="stats-grid">
+            <div class="stats-grid">
                 <!-- Total (Neto + Caja) -->
                 <div class="stat-card stat-card-total">
                     <div class="stat-bg-icon">
@@ -186,16 +186,17 @@
                 </div>
 
                 <!-- Autos Pendientes -->
-<div class="stat-card stat-card-pendientes" id="cardPendientesAction" onclick="openModalAutosPendientes()">
-    <div class="stat-bg-icon">
-        <i class="fa-solid fa-clock-rotate-left"></i>
-    </div>
-    <span class="stat-label">
-        <i class="fa-solid fa-clock-rotate-left stat-icon-sm"></i> PENDIENTES
-    </span>
-    <span class="stat-value" id="statPendientesMonto">$0.00</span>
-    <span class="stat-sub" id="statPendientesCountCard">0 autos pendientes</span>
-</div>
+                <div class="stat-card stat-card-pendientes" id="cardPendientesAction" onclick="openModalAutosPendientes()">
+                    <div class="stat-bg-icon">
+                        <i class="fa-solid fa-clock-rotate-left"></i>
+                    </div>
+                    <span class="stat-label">
+                        <i class="fa-solid fa-clock-rotate-left stat-icon-sm"></i> PENDIENTE
+                    </span>
+                    <span class="stat-value" id="statPendientesCountCard">0</span>
+                    <span class="stat-sub" id="statPendientesMonto">$0.00 por cobrar</span>
+                </div>
+            </div>
 
             <!-- TARJETA 4: FORMAS DE PAGO -->
             <div class="card">
@@ -1086,7 +1087,7 @@
     </div>
 
         <!-- Script Principal de la Aplicación -->
-    <script src="script.js?v=v3.0.0-pro-supabase"></script>
+    <script src="script.js?v=v3-pro-21oct2026"></script>
 
     <!-- Service Worker PWA -->
     <script>
