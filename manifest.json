@@ -1,6 +1,6 @@
 {
   "id": "./index.html",
-  "short_name": "LavaAuto",
+  "short_name": "CarWash",
   "name": "LavaAuto - Control de Servicios",
   "description": "Sistema completo de gestión y control operativo diario para administración de lavados de autos.",
   "start_url": "./index.html",
