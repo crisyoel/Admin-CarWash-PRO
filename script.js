@@ -1584,7 +1584,9 @@ function renderSubList(containerId, searchInputId, filterFn) {
             ? `<span class="badge badge-motor"><i class="fa-solid fa-gears"></i> Motor</span>`
             : '';
 
-        const totalCobradoVehiculo = getMontoCobro(r);
+        // Mostramos en la tarjeta únicamente el valor neto del servicio (sin incluir la propina visualmente)         
+        const propinaParaTarjeta = (r.formaPago === 'Yappy' || r.formaPago === 'Yape') ? propinaVal : 0;        
+        const totalCobradoVehiculo = Math.max(0, getMontoCobro(r) - propinaParaTarjeta);
 
         const accionCard = esExpress ? '' : `onclick="editRecord('${r.id}')"`;
         const tituloCard = esExpress ? '' : 'title="Haz clic para editar"';
@@ -1758,9 +1760,14 @@ function openModalYappy() {
         }
     } else {
         pagosYappy.forEach(r => {
-            const mMonto = parseFloat(r.monto || r.precio || 0);
+            // 1. Obtener el monto base y descontar el dólar de administración si lo tiene aplicado
+            const precioBase = parseFloat(r.monto || r.precio || 0);
+            const descuentoAplicado = Math.min(precioBase, Math.max(0, parseFloat(r.descuento) || 0));
+            const mMonto = Math.max(0, precioBase - descuentoAplicado); // Aquí se resta correctamente el descuento ($6 - $1 = $5)
+            
             const mPropina = parseFloat(r.propina || 0);
-            const mTotal = mMonto + mPropina; 
+            const mTotal = mMonto + mPropina; // El total real que llegó al banco por Yappy/Yape ($5 + $1 = $6)
+
 
             // PRIORIDAD HORA
             const horaMostrar = r.horaCobro || r.hora || r.horaIngreso || 'N/A';
