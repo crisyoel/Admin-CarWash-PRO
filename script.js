@@ -2220,7 +2220,7 @@ function updateUI() {
         if (elTopServicio) elTopServicio.textContent = topServicioNombre;
         if (elTopServicioPct) elTopServicioPct.textContent = `${pctTopServicio}% de las ventas`;
 
-        if (elTicketPromedio) elTicketPromedio.textContent = `$${ticketPromedio.toFixed(2)}`;
+        if (elTicketPromedio) elTicketPromedio.textContent = `$${Math.round(ticketPromedio).toFixed(2)}`;
 
         if (elUltimaTiempo) elUltimaTiempo.textContent = horaUltimo;
         if (elUltimaAuto) elUltimaAuto.textContent = `${placaUltimo} (${tipoUltimo})`;
