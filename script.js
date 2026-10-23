@@ -1671,7 +1671,7 @@ function solicitarTipoPago(id) {
 
     if (infoDescuento) {
     if (descuento > 0) {
-        
+
         infoDescuento.innerHTML = `<span><i class="fas fa-tags"></i> Descuento aplicado</span> <strong>-$${descuento.toFixed(2)}</strong>`;
         infoDescuento.style.display = 'flex';
     } else {
@@ -2079,12 +2079,13 @@ function updateUI() {
     if (typeof actualizarTickerDescuentos === 'function') actualizarTickerDescuentos();
     if (statRendimientoMasCaja) statRendimientoMasCaja.textContent = `$${totalRendimientoMasCaja.toFixed(2)}`;
 
-    if (statPendientesCountCard) {
-        statPendientesCountCard.textContent = appData.registros.filter(r => r.estadoPago === 'PENDIENTE').length;
+        if (statPendientesCountCard) {
+        statPendientesCountCard.textContent = `$${montoPendientes.toFixed(2)}`;
     }
 
     if (statPendientesMonto) {
-        statPendientesMonto.textContent = `$${montoPendientes.toFixed(2)} por cobrar`;
+        const totalPendientes = appData.registros.filter(r => r.estadoPago === 'PENDIENTE').length;
+        statPendientesMonto.textContent = `${totalPendientes} auto${totalPendientes === 1 ? '' : 's'} por cobrar`;
     }
 
     const headerTotalBruto = document.getElementById('headerTotalBruto');
