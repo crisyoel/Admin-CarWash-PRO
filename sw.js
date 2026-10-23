@@ -1,4 +1,4 @@
-const CACHE_NAME = 'v3-pro-21oct2026';
+const CACHE_NAME = 'v3-pro-22oct2026';
 const ASSETS = [
   './',
   './index.html',
