@@ -7,7 +7,7 @@
    CONTROL DE VERSIÓN OFICIAL - VERSIÓN 3.0 PRO
    ================================================== */
 const STORAGE_KEY = 'admin_carwash_data_v3';
-const SCRIPT_VERSION = 'v3-pro-21oct2026';
+const SCRIPT_VERSION = 'v3-pro-22oct2026';
 
 
 /* ==================================================
@@ -20,7 +20,7 @@ const SCRIPT_VERSION = 'v3-pro-21oct2026';
    ================================================== */
 function showAppConfirm(message, onConfirm) {
     let modal = document.getElementById('appConfirmModal');
-    
+
     if (!modal) {
         modal = document.createElement('div');
         modal.id = 'appConfirmModal';
@@ -42,7 +42,7 @@ function showAppConfirm(message, onConfirm) {
 
     const msgElement = document.getElementById('appConfirmMessage');
     if (msgElement) msgElement.textContent = String(message ?? '');
-    
+
     modal.classList.add('open');
 
     const okBtn = document.getElementById('appConfirmOkBtn');
@@ -1734,12 +1734,17 @@ function openModalYappy() {
 
     // 1. Obtener registros del día
     const registros = appData?.registros || appData?.autos || [];
-
-    // 2. Filtrar únicamente los pagos por Yappy que estén PAGADOS
+    
+    // 2. Filtrar pagos por Yappy, Yape O Mixtos que tengan monto en Yappy > 0 y estén PAGADOS
     const pagosYappy = registros.filter(r => {
         const fp = (r.formaPago || r.metodoPago || '').toLowerCase();
         const est = (r.estadoPago || r.estado || '').toLowerCase();
-        return (fp === 'yappy' || fp === 'yape') && (est === 'pagado' || est === 'completado' || est === 'cobrado');
+        
+        const esYappyPuro = (fp === 'yappy' || fp === 'yape');
+        const esMixtoConYappy = (fp === 'mixto' && (parseFloat(r.montoYappyMixto) || 0) > 0);
+        const estaPagado = (est === 'pagado' || est === 'completado' || est === 'cobrado');
+
+        return (esYappyPuro || esMixtoConYappy) && estaPagado;
     });
 
     let totalYappySum = 0;
@@ -1747,7 +1752,7 @@ function openModalYappy() {
 
     if (container) container.innerHTML = '';
 
-        if (pagosYappy.length === 0) {
+    if (pagosYappy.length === 0) {
         if (container) {
             container.innerHTML = `
                 <div style="display: flex; flex-direction: column; align-items: center; justify-content: center; padding: 2.5rem 1rem; text-align: center;">
@@ -1760,14 +1765,15 @@ function openModalYappy() {
         }
     } else {
         pagosYappy.forEach(r => {
-            // 1. Obtener el monto base y descontar el dólar de administración si lo tiene aplicado
-            const precioBase = parseFloat(r.monto || r.precio || 0);
-            const descuentoAplicado = Math.min(precioBase, Math.max(0, parseFloat(r.descuento) || 0));
-            const mMonto = Math.max(0, precioBase - descuentoAplicado); // Aquí se resta correctamente el descuento ($6 - $1 = $5)
+            const fp = (r.formaPago || '').toLowerCase();
             
-            const mPropina = parseFloat(r.propina || 0);
-            const mTotal = mMonto + mPropina; // El total real que llegó al banco por Yappy/Yape ($5 + $1 = $6)
+            // Si es pago mixto, tomamos r.montoYappyMixto; si es Yappy puro, calculamos el total del servicio + propina
+            const mMontoYappy = fp === 'mixto' 
+                ? (parseFloat(r.montoYappyMixto) || 0) 
+                : getMontoCobro(r); 
 
+            const mPropina = parseFloat(r.propina || 0);
+            const mTotal = mMontoYappy; // Monto real que entró por Yappy en esta transacción
 
             // PRIORIDAD HORA
             const horaMostrar = r.horaCobro || r.hora || r.horaIngreso || 'N/A';
@@ -1778,22 +1784,23 @@ function openModalYappy() {
             }
 
             // DESGLOSE SIN DECIMALES
-            const mMontoInt = Math.floor(mMonto);
+            const mMontoInt = Math.floor(mMontoYappy);
             const mPropinaInt = Math.floor(mPropina);
 
-            // HTML PURAS CLASES (Con ícono de monedas para la propina)
+            // HTML PURAS CLASES
             const item = document.createElement('div');
             item.className = 'yappy-card-item';
             item.innerHTML = `
                 <!-- LADO IZQUIERDO: Placa arriba -->
                 <div class="yappy-item-info">
                     <div class="yappy-header-row">
-                        <strong class="yappy-item-placa">${r.placa || 'Sin Placa'}</strong>
+                        <strong class="yappy-item-placa">${r.placa || r.auto || 'Sin Placa'}</strong>
+                        ${fp === 'mixto' ? '<span class="badge" style="font-size: 0.55rem; background: #e0f2fe; color: #0369a1; padding: 1px 4px; border-radius: 4px;">Mixto</span>' : ''}
                     </div>
                     <!-- SUB-ROW: Serv, Ícono de Monedas + Propina, y Hora -->
                     <div class="yappy-sub-row" style="display: flex; align-items: center; gap: 8px; margin-top: 2px;">
                         ${mPropina > 0 
-                            ? `<span class="yappy-item-desglose">Serv: $${mMontoInt} <i class="fa-solid fa-coins" style="margin-left: 4px; margin-right: 2px; color: #94a3b8;"></i>$${mPropinaInt}</span>` 
+                            ? `<span class="yappy-item-desglose">Yappy: $${mMontoInt} <i class="fa-solid fa-coins" style="margin-left: 4px; margin-right: 2px; color: #94a3b8;"></i>$${mPropinaInt}</span>` 
                             : `<span class="yappy-item-desglose">${r.modelo || r.tipoVehiculo || 'Lavado General'}</span>`}
                         <span class="yappy-item-hora"><i class="fa-regular fa-clock"></i> ${horaMostrar}</span>
                     </div>
@@ -1819,6 +1826,7 @@ function openModalYappy() {
     modal.classList.remove('is-hidden', 'display-none');
     modal.classList.add('open');
 }
+
 
 function closeModalYappy() {
     const modal = document.getElementById('modalYappy');
@@ -1911,7 +1919,6 @@ function renderResumenLavadoresHome() {
     contenedor.innerHTML = html;
 }
 
-
 /* ==================================================
    SECCIÓN: ACTUALIZACIÓN DE INTERFAZ GENERAL (UI)
    ================================================== */
@@ -1941,16 +1948,23 @@ function updateUI() {
     let cobrado = 0, efectivo = 0, yappy = 0;
     appData.registros.forEach(r => {
         if (r.estadoPago === 'PAGADO') {
-            const mTotalTransaccion = getMontoCobro(r); // $10.00 (Monto + Propina)
-            const propina = parseFloat(r.propina) || 0; // $4.00
+            const mTotalTransaccion = getMontoCobro(r); // Transacción total (Monto - Descuento + Propina)
+            const propina = parseFloat(r.propina) || 0; 
 
-            // Ingreso Real del Auto = Transacción total menos la propina ($6.00)
+            // Ingreso Real del Servicio
             const ingresoRealServicio = Math.max(0, mTotalTransaccion - propina);
             cobrado += ingresoRealServicio;
 
-            // Formas de Pago: Registran el dinero completo que entró por cada medio
-            if (r.formaPago === 'Efectivo') efectivo += mTotalTransaccion;
-            if (r.formaPago === 'Yappy') yappy += mTotalTransaccion; // Registra $10.00 para la conciliación
+            // Formas de Pago: Manejo de Efectivo, Yappy y Pago Mixto / Fraccionado
+            if (r.formaPago === 'Efectivo') {
+                efectivo += mTotalTransaccion;
+            } else if (r.formaPago === 'Yappy') {
+                yappy += mTotalTransaccion;
+            } else if (r.formaPago === 'Mixto') {
+                // Sumamos la porción fraccionada correspondiente a cada medio
+                efectivo += (parseFloat(r.montoEfectivoMixto) || 0);
+                yappy += (parseFloat(r.montoYappyMixto) || 0);
+            }
         }
     });
 
@@ -2038,12 +2052,11 @@ function updateUI() {
     if (statRendimientoMasCaja) statRendimientoMasCaja.textContent = `$${totalRendimientoMasCaja.toFixed(2)}`;
 
     if (statPendientesCountCard) {
-        statPendientesCountCard.textContent = `$${montoPendientes.toFixed(2)}`;
+        statPendientesCountCard.textContent = appData.registros.filter(r => r.estadoPago === 'PENDIENTE').length;
     }
 
     if (statPendientesMonto) {
-        const totalPendientes = appData.registros.filter(r => r.estadoPago === 'PENDIENTE').length;
-        statPendientesMonto.textContent = `${totalPendientes} auto${totalPendientes === 1 ? '' : 's'} por cobrar`;
+        statPendientesMonto.textContent = `$${montoPendientes.toFixed(2)} por cobrar`;
     }
 
     const headerTotalBruto = document.getElementById('headerTotalBruto');
@@ -2185,12 +2198,12 @@ function updateUI() {
         if (elUltimaDetalle) elUltimaDetalle.textContent = `${ultimoRegistro.servicio || 'Servicio'} - ${pistaUltimo}`;
     }
 
-    // 5. META DEL DÍA ($200.00 OBJETIVO - CALCULADO EN $6.00 DEL SERVICIO, SIN PROPINAS)
+    // 5. META DEL DÍA ($200.00 OBJETIVO)
     const OBJETIVO_META = 200.00;
     const totalServiciosRegistrados = appData.registros.reduce((acc, r) => {
         const montoServicio = parseFloat(r.monto) || 0;
         const descuentoServicio = parseFloat(r.descuento) || 0;
-        return acc + Math.max(0, montoServicio - descuentoServicio); // $6.00 limpios
+        return acc + Math.max(0, montoServicio - descuentoServicio); 
     }, 0);
 
     const pctMeta = Math.min(100, Math.round((totalServiciosRegistrados / OBJETIVO_META) * 100));
@@ -2206,7 +2219,7 @@ function updateUI() {
     if (elMetaObjetivo) elMetaObjetivo.textContent = `$${OBJETIVO_META.toFixed(2)}`;
 
     // ==================================================
-    // RENDERIZADO Y ACTUALIZACIÓN DE SELECTS (OBLIGATORIO AL FINAL)
+    // RENDERIZADO Y ACTUALIZACIÓN DE SELECTS Y LISTAS
     // ==================================================
     if (typeof renderCajaUI === 'function') renderCajaUI();
     if (typeof renderRecordsList === 'function') renderRecordsList();
@@ -2220,7 +2233,6 @@ function updateUI() {
     if (typeof populateSelects === 'function') populateSelects();
     if (typeof renderLavadoresSelect === 'function') renderLavadoresSelect();
 }
-
 
 /* ==================================================
    SECCIÓN: PAGOS Y LIQUIDACIÓN A LAVADORES
@@ -3228,3 +3240,64 @@ window.addEventListener('appinstalled', () => {
     deferredInstallPrompt = null;
     document.getElementById('pwaInstallButton')?.remove();
 });
+
+/* ==================================================
+   LÓGICA DE PAGO FRACCIONADO / MIXTO
+   ================================================== */
+
+// 1. Muestra u oculta la sección de inputs mixtos dentro del modal de pago
+function toggleSeccionMixto() {
+    const seccion = document.getElementById('seccionPagoMixto');
+    if (!seccion) return;
+    
+    // Alternar visibilidad de forma limpia
+    if (seccion.style.display === 'none' || seccion.style.display === '') {
+        seccion.style.display = 'block';
+    } else {
+        seccion.style.display = 'none';
+    }
+}
+
+// 2. Procesa y guarda el pago cuando se divide en efectivo y Yappy
+function confirmarPagoMixto() {
+    if (!paymentModalRecordId) return;
+
+    const r = appData.registros.find(x => x.id === paymentModalRecordId);
+    if (!r) {
+        closePaymentModal();
+        return;
+    }
+
+    const inputEfectivo = document.getElementById('modalInputMixtoEfectivo');
+    const inputYappy = document.getElementById('modalInputMixtoYappy');
+    const propinaInput = document.getElementById('modalInputPropina');
+
+    const montoEfectivo = Math.max(0, parseFloat(inputEfectivo?.value) || 0);
+    const montoYappy = Math.max(0, parseFloat(inputYappy?.value) || 0);
+    const propina = Math.max(0, parseFloat(propinaInput?.value) || 0);
+
+    if (montoEfectivo <= 0 && montoYappy <= 0) {
+        alert('Por favor ingresa al menos un monto válido en efectivo o Yape.');
+        return;
+    }
+
+    // Guardamos los datos del pago mixto en el registro
+    r.estadoPago = 'PAGADO';
+    r.formaPago = 'Mixto';
+    r.montoEfectivoMixto = montoEfectivo;
+    r.montoYappyMixto = montoYappy;
+    r.propina = propina;
+    
+    // ⏰ AQUÍ CAPTURAMOS LA HORA EXACTA DEL COBRÓ MIXTO (Igual que en los pagos puros de Yape)
+    r.horaCobro = new Date().toLocaleTimeString([], { hour: '2-digit', minute: '2-digit' });
+
+    closePaymentModal();
+    
+    // Limpiar y ocultar la sección mixta para la próxima vez
+    const seccion = document.getElementById('seccionPagoMixto');
+    if (seccion) seccion.style.display = 'none';
+    if (inputEfectivo) inputEfectivo.value = '';
+    if (inputYappy) inputYappy.value = '';
+
+    saveData(); // Guarda y actualiza toda la interfaz
+}
