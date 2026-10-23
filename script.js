@@ -1924,7 +1924,7 @@ function renderResumenLavadoresHome() {
                 <div class="lavador-payout-right">
                     <!-- MUESTRA ÚNICAMENTE LA COMISIÓN LIMPIA ($3.00) -->
                     <span class="lavador-payout-amount">$${gananciaLavador.toFixed(2)}</span>
-                    <div class="lavador-bruto-text">Bruto Autos: $${totalBrutoLavador.toFixed(2)}</div>
+                    <div class="lavador-bruto-text">Total: $${totalBrutoLavador.toFixed(2)}</div>
                 </div>
             </div>
         `;
