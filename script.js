@@ -2204,7 +2204,7 @@ function updateUI() {
             }
         }
         const pctTopServicio = Math.round((maxServicios / totalAutos) * 100);
-        const ticketPromedio = sumaMontosServicios / totalAutos;
+        const ticketPromedioEntero = Math.floor(sumaMontosServicios / totalAutos);
 
         const ultimoRegistro = registrosHoy[registrosHoy.length - 1];
         const placaUltimo = (ultimoRegistro.placa || ultimoRegistro.plate || 'Vehículo').toString().toUpperCase();
@@ -2220,7 +2220,7 @@ function updateUI() {
         if (elTopServicio) elTopServicio.textContent = topServicioNombre;
         if (elTopServicioPct) elTopServicioPct.textContent = `${pctTopServicio}% de las ventas`;
 
-        if (elTicketPromedio) elTicketPromedio.textContent = `$${Math.round(ticketPromedio).toFixed(2)}`;
+        if (elTicketPromedio) elTicketPromedio.textContent = `$${ticketPromedioEntero}.00`;
 
         if (elUltimaTiempo) elUltimaTiempo.textContent = horaUltimo;
         if (elUltimaAuto) elUltimaAuto.textContent = `${placaUltimo} (${tipoUltimo})`;
