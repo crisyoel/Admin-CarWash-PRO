@@ -2943,3 +2943,48 @@ body.custom-select-open {
     background-color: #0369a1 !important;
     transform: scale(0.98) !important;
 }
+
+/* Estilos para la sección de Pago Mixto / Fraccionado */
+.btn-payment-mixto {
+    grid-column: span 2;
+    background: #f1f5f9;
+    border: 1px dashed #cbd5e1;
+    color: #334155;
+    font-weight: 700;
+}
+
+.seccion-pago-mixto-hidden {
+    display: none;
+    margin-top: 12px;
+    border-top: 1px solid #e2e8f0;
+    padding-top: 10px;
+}
+
+.mixto-inputs-grid {
+    display: flex;
+    gap: 8px;
+    margin-bottom: 10px;
+}
+
+.mixto-input-group {
+    flex: 1;
+}
+
+.mixto-label {
+    font-size: 0.75rem;
+    font-weight: 700;
+    color: #475569;
+    display: block;
+    margin-bottom: 4px;
+}
+
+.btn-confirmar-mixto {
+    width: 100%;
+    background: #0284c7;
+    color: #ffffff;
+    font-weight: 700;
+    padding: 10px;
+    border: none;
+    border-radius: 8px;
+    cursor: pointer;
+}
