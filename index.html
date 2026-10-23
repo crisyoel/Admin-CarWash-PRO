@@ -989,43 +989,66 @@
     </div>
 
     <!-- MODAL: PAGO Y PROPINA -->
-    <div class="modal-overlay" id="paymentModal">
-        <div class="modal modal-sm-custom">
-            <div class="modal-title justify-center">
-                <i class="fa-solid fa-wallet icon-primary"></i> Registrar Pago
-            </div>
+<div class="modal-overlay" id="paymentModal">
+    <div class="modal modal-sm-custom">
+        <div class="modal-title justify-center">
+            <i class="fa-solid fa-wallet icon-primary"></i> Registrar Pago
+        </div>
 
-            <div class="payment-summary-box">
-                <span class="text-xs color-gray block">Monto del Servicio</span>
-                <strong id="modalMontoServicio" class="text-xl color-dark">$0.00</strong>
-            </div>
+        <div class="payment-summary-box">
+            <span class="text-xs color-gray block">Monto del Servicio</span>
+            <strong id="modalMontoServicio" class="text-xl color-dark">$0.00</strong>
+        </div>
 
-            <div class="form-group text-left mb-3">
-                <label class="form-label text-sm">
-                    <i class="fa-solid fa-hand-holding-dollar icon-success"></i> Propina ($) <small class="modal-help-text">(Opcional)</small>
-                </label>
-                <input type="number" step="0.50" min="0" class="form-control" id="modalInputPropina" placeholder="0.00" value="" oninput="actualizarTotalModalPago()">
-            </div>
+        <div class="form-group text-left mb-3">
+            <label class="form-label text-sm">
+                <i class="fa-solid fa-hand-holding-dollar icon-success"></i> Propina ($) <small class="modal-help-text">(Opcional)</small>
+            </label>
+            <input type="number" step="0.50" min="0" class="form-control" id="modalInputPropina" placeholder="0.00" value="0.00" oninput="actualizarTotalModalPago()">
+        </div>
 
-            <div class="payment-total-box">
-                <span class="text-sm font-bold color-sky-dark">TOTAL RECIBIDO:</span>
-                <strong id="modalMontoTotalCobro" class="text-lg color-sky">$0.00</strong>
-            </div>
+        <div class="payment-total-box">
+            <span class="text-sm font-bold color-sky-dark">TOTAL RECIBIDO:</span>
+            <strong id="modalMontoTotalCobro" class="text-lg color-sky">$0.00</strong>
+        </div>
 
-            <div class="payment-actions-gap">
-                <button type="button" class="btn btn-payment-cash" onclick="confirmarPagoMetodo('Efectivo')">
-                    <i class="fa-solid fa-money-bill-wave"></i> Cobrar Efectivo
-                </button>
-                <button type="button" class="btn btn-payment-yappy" onclick="confirmarPagoMetodo('Yappy')">
-                    <i class="fa-solid fa-mobile-screen-button"></i> Cobrar por Yappy
-                </button>
-            </div>
-
-            <button type="button" onclick="closePaymentModal()" class="btn-link-cancel">
-                Cancelar
+        <div class="payment-actions-gap">
+            <button type="button" class="btn btn-payment-cash" onclick="confirmarPagoMetodo('Efectivo')">
+                <i class="fa-solid fa-money-bill-wave"></i> Cobrar Efectivo
+            </button>
+            <button type="button" class="btn btn-payment-yappy" onclick="confirmarPagoMetodo('Yappy')">
+                <i class="fa-solid fa-mobile-screen-button"></i> Cobrar por Yappy
+            </button>
+            
+            <!-- BOTÓN DE PAGO MIXTO / FRACCIONADO -->
+            <button type="button" class="btn btn-payment-mixto" onclick="toggleSeccionMixto()">
+                <i class="fa-solid fa-right-left"></i> Pago Fraccionado / Mixto
             </button>
         </div>
+
+        <!-- CONTENEDOR DE CAMPOS MIXTOS (Oculto por defecto) -->
+        <div id="seccionPagoMixto" class="seccion-pago-mixto-hidden">
+            <div class="mixto-inputs-grid">
+                <div class="mixto-input-group">
+                    <label class="mixto-label">Efectivo ($)</label>
+                    <input type="number" step="0.50" min="0" class="form-control" id="modalInputMixtoEfectivo" placeholder="0.00">
+                </div>
+                <div class="mixto-input-group">
+                    <label class="mixto-label">Yappy ($)</label>
+                    <input type="number" step="0.50" min="0" class="form-control" id="modalInputMixtoYappy" placeholder="0.00">
+                </div>
+            </div>
+            <button type="button" class="btn btn-confirmar-mixto" onclick="confirmarPagoMixto()">
+                Confirmar Pago Mixto
+            </button>
+        </div>
+
+        <button type="button" onclick="closePaymentModal()" class="btn-link-cancel">
+            Cancelar
+        </button>
     </div>
+</div>
+
 
     <!-- MODAL: CONCILIACIÓN DE YAPPY -->
     <div class="modal-overlay is-hidden" id="modalYappy">
@@ -1086,7 +1109,7 @@
     </div>
 
         <!-- Script Principal de la Aplicación -->
-    <script src="script.js?v=v3-pro-21oct2026"></script>
+    <script src="script.js?v=v3-pro-22oct2026"></script>
 
     <!-- Service Worker PWA -->
     <script>
