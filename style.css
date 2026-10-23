@@ -1717,22 +1717,22 @@ select.form-control {
 }
 
 
-/* Alinear título y botón en la vista Clientes */
-#view-clientes .card-title {
+#view-clientes .card > .card-title {
     display: flex;
     flex-direction: row;
     align-items: center;
     justify-content: space-between;
+    width: 100%;
     gap: 12px;
 }
 
-#view-clientes .card-title > span {
+#view-clientes .card > .card-title > span {
     flex: 1;
     min-width: 0;
 }
 
-#view-clientes .card-title > button {
-    flex-shrink: 0;
+#view-clientes .card > .card-title > button {
+    flex: 0 0 auto;
     margin-left: auto;
 }
 
