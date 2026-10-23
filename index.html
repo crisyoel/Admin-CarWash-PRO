@@ -1006,7 +1006,9 @@
             </label>
             <input type="number" step="0.50" min="0" class="form-control" id="modalInputPropina" placeholder="0.00" value="0.00" oninput="actualizarTotalModalPago()">
         </div>
-
+        
+      <div id="modalInfoDescuento" class="modal-info-descuento"></div>
+      
         <div class="payment-total-box">
             <span class="text-sm font-bold color-sky-dark">TOTAL RECIBIDO:</span>
             <strong id="modalMontoTotalCobro" class="text-lg color-sky">$0.00</strong>
@@ -1019,7 +1021,7 @@
             <button type="button" class="btn btn-payment-yappy" onclick="confirmarPagoMetodo('Yappy')">
                 <i class="fa-solid fa-mobile-screen-button"></i> Cobrar por Yappy
             </button>
-            
+
             <!-- BOTÓN DE PAGO MIXTO / FRACCIONADO -->
             <button type="button" class="btn btn-payment-mixto" onclick="toggleSeccionMixto()">
                 <i class="fa-solid fa-right-left"></i> Pago Mixto
