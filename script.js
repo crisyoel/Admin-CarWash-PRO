@@ -438,7 +438,7 @@ function calculateGlobalTotals() {
     }
 
     const sumaBrutaPorLavador = {};
-    appData.registros.forEach(r => {
+        appData.registros.forEach(r => {
         const lav = r.lavador || 'Sin Asignar';
         const montoAuto = parseFloat(r.monto) || 0;
         const propinaAuto = parseFloat(r.propina) || 0;
@@ -451,12 +451,19 @@ function calculateGlobalTotals() {
             propinasPorLavador[lav] += propinaAuto;
 
             if (!autosPorLavador[lav]) autosPorLavador[lav] = 0;
-            autosPorLavador[lav]++;
+            
+            // --- DETECCIÓN DE MOTOR PARA CONTAR COMO AUTO ADICIONAL ---
+            const serviciosArray = r.serviciosArray || (r.servicio ? r.servicio.split('+').map(x => x.trim()) : []);
+            const tieneMotor = serviciosArray.some(s => s.toLowerCase() === 'motor') || /\bmotor\b/i.test(r.servicio || '');
+            
+            // Si tiene motor, cuenta como 2 unidades (el auto + el motor)
+            autosPorLavador[lav] += tieneMotor ? 2 : 1;
 
             const split = splitMonto(montoAuto);
             totalSub += split.subadmin;
         }
     });
+
 
     Object.keys(sumaBrutaPorLavador).forEach(lav => {
         const totalBrutoLavador = sumaBrutaPorLavador[lav];
@@ -1937,12 +1944,21 @@ function renderCajaUI() {
 
 function updateUI() {
     const g = calculateGlobalTotals();
-    const totAutos = appData.registros.length;
+    
+    // --- AQUÍ CALCULAMOS LAS UNIDADES CONTANDO EL MOTOR COMO DOBLE ---
+    let totalUnidadesAtendidas = 0;
+    appData.registros.forEach(r => {
+        const serviciosArray = r.serviciosArray || (r.servicio ? r.servicio.split('+').map(x => x.trim()) : []);
+        const tieneMotor = serviciosArray.some(s => s.toLowerCase() === 'motor') || /\bmotor\b/i.test(r.servicio || '');
+        totalUnidadesAtendidas += tieneMotor ? 2 : 1;
+    });
+
+    const totAutos = totalUnidadesAtendidas; // Usamos este total calculado
     const pend = appData.registros.filter(r=>r.estadoPago==='PENDIENTE').length;
 
     const statAtendidos = document.getElementById('statAtendidos');
     const statPendientesCount = document.getElementById('statPendientesCount');
-    if(statAtendidos) statAtendidos.textContent = totAutos;
+    if(statAtendidos) statAtendidos.textContent = totAutos; // Ahora mostrará 2 cuando tenga motor
     if(statPendientesCount) statPendientesCount.textContent = pend;
 
     let cobrado = 0, efectivo = 0, yappy = 0;
