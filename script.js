@@ -1657,6 +1657,7 @@ function solicitarTipoPago(id) {
     const propinaInput = document.getElementById('modalInputPropina');
     const totalCobro = document.getElementById('modalMontoTotalCobro');
     const modal = document.getElementById('paymentModal');
+    const infoDescuento = document.getElementById('modalInfoDescuento');
 
     const montoBruto = Math.max(0, parseFloat(r.monto) || 0);
     const descuento = Math.min(
@@ -1666,7 +1667,18 @@ function solicitarTipoPago(id) {
     const montoNeto = Math.max(0, montoBruto - descuento);
     const propina = Math.max(0, parseFloat(r.propina) || 0);
 
-    if (montoServicio) montoServicio.textContent = `$${montoNeto.toFixed(2)}`;
+    if (montoServicio) montoServicio.textContent = `$${montoBruto.toFixed(2)}`;
+
+    if (infoDescuento) {
+    if (descuento > 0) {
+        
+        infoDescuento.innerHTML = `<span><i class="fas fa-tags"></i> Descuento aplicado</span> <strong>-$${descuento.toFixed(2)}</strong>`;
+        infoDescuento.style.display = 'flex';
+    } else {
+        infoDescuento.textContent = '';
+        infoDescuento.style.display = 'none';
+    }
+}
     if (propinaInput) propinaInput.value = propina > 0 ? propina.toFixed(2) : '';
     if (totalCobro) totalCobro.textContent = `$${(montoNeto + propina).toFixed(2)}`;
 
