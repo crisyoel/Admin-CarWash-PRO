@@ -2996,9 +2996,9 @@ body.custom-select-open {
     justify-content: space-between;
     align-items: center;
     margin: 0px 0px 10px 0px;
-    padding: 8px 10px;
+    padding: 10px 12px;
     border: 1px dashed #dc2626;
-    border-radius: 5px;
+    border-radius: 10px;
     background-color: rgba(220, 38, 38, 0.08);
     color: #dc2626;
     font-size: 0.85rem;
