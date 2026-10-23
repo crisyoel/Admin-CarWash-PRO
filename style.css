@@ -1682,26 +1682,6 @@ select.form-control {
     gap: 10px;
 }
 
-/* Contenedor del título e icono de la tarjeta en la Vista Clientes */
-#view-clientes .card > .card-title {
-    display: flex;
-    justify-content: space-between;
-    align-items: center;
-    width: 100%;
-}
-
-/* El título se mantiene en su sitio a la izquierda, el botón salta a la derecha */
-#view-clientes .card > .card-title span {
-    display: flex;
-    align-items: center;
-    gap: 8px;
-}
-
-#view-clientes .card > .card-title .btn-icon {
-    margin-left: auto;
-    margin-right: 0;
-}
-
 .list-card {
     background: var(--white);
     border-radius: var(--radius-sm);
@@ -1735,7 +1715,6 @@ select.form-control {
     margin-bottom: 12px;
     color: var(--gray-300);
 }
-
 
 
 /* ==========================================================================
