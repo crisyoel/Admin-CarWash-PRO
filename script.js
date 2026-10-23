@@ -451,11 +451,11 @@ function calculateGlobalTotals() {
             propinasPorLavador[lav] += propinaAuto;
 
             if (!autosPorLavador[lav]) autosPorLavador[lav] = 0;
-            
+
             // --- DETECCIÓN DE MOTOR PARA CONTAR COMO AUTO ADICIONAL ---
             const serviciosArray = r.serviciosArray || (r.servicio ? r.servicio.split('+').map(x => x.trim()) : []);
             const tieneMotor = serviciosArray.some(s => s.toLowerCase() === 'motor') || /\bmotor\b/i.test(r.servicio || '');
-            
+
             // Si tiene motor, cuenta como 2 unidades (el auto + el motor)
             autosPorLavador[lav] += tieneMotor ? 2 : 1;
 
@@ -1667,7 +1667,7 @@ function solicitarTipoPago(id) {
     const propina = Math.max(0, parseFloat(r.propina) || 0);
 
     if (montoServicio) montoServicio.textContent = `$${montoNeto.toFixed(2)}`;
-    if (propinaInput) propinaInput.value = propina.toFixed(2);
+    if (propinaInput) propinaInput.value = propina > 0 ? propina.toFixed(2) : '';
     if (totalCobro) totalCobro.textContent = `$${(montoNeto + propina).toFixed(2)}`;
 
     if (modal) modal.classList.add('open');
@@ -1741,12 +1741,12 @@ function openModalYappy() {
 
     // 1. Obtener registros del día
     const registros = appData?.registros || appData?.autos || [];
-    
+
     // 2. Filtrar pagos por Yappy, Yape O Mixtos que tengan monto en Yappy > 0 y estén PAGADOS
     const pagosYappy = registros.filter(r => {
         const fp = (r.formaPago || r.metodoPago || '').toLowerCase();
         const est = (r.estadoPago || r.estado || '').toLowerCase();
-        
+
         const esYappyPuro = (fp === 'yappy' || fp === 'yape');
         const esMixtoConYappy = (fp === 'mixto' && (parseFloat(r.montoYappyMixto) || 0) > 0);
         const estaPagado = (est === 'pagado' || est === 'completado' || est === 'cobrado');
@@ -1773,7 +1773,7 @@ function openModalYappy() {
     } else {
         pagosYappy.forEach(r => {
             const fp = (r.formaPago || '').toLowerCase();
-            
+
             // Si es pago mixto, tomamos r.montoYappyMixto; si es Yappy puro, calculamos el total del servicio + propina
             const mMontoYappy = fp === 'mixto' 
                 ? (parseFloat(r.montoYappyMixto) || 0) 
@@ -1944,7 +1944,7 @@ function renderCajaUI() {
 
 function updateUI() {
     const g = calculateGlobalTotals();
-    
+
     // --- AQUÍ CALCULAMOS LAS UNIDADES CONTANDO EL MOTOR COMO DOBLE ---
     let totalUnidadesAtendidas = 0;
     appData.registros.forEach(r => {
@@ -3265,7 +3265,7 @@ window.addEventListener('appinstalled', () => {
 function toggleSeccionMixto() {
     const seccion = document.getElementById('seccionPagoMixto');
     if (!seccion) return;
-    
+
     // Alternar visibilidad de forma limpia
     if (seccion.style.display === 'none' || seccion.style.display === '') {
         seccion.style.display = 'block';
@@ -3303,12 +3303,12 @@ function confirmarPagoMixto() {
     r.montoEfectivoMixto = montoEfectivo;
     r.montoYappyMixto = montoYappy;
     r.propina = propina;
-    
+
     // ⏰ AQUÍ CAPTURAMOS LA HORA EXACTA DEL COBRÓ MIXTO (Igual que en los pagos puros de Yape)
     r.horaCobro = new Date().toLocaleTimeString([], { hour: '2-digit', minute: '2-digit' });
 
     closePaymentModal();
-    
+
     // Limpiar y ocultar la sección mixta para la próxima vez
     const seccion = document.getElementById('seccionPagoMixto');
     if (seccion) seccion.style.display = 'none';
