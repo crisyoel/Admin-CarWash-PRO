@@ -7,7 +7,7 @@
    CONTROL DE VERSIÓN OFICIAL - VERSIÓN 3.0 PRO
    ================================================== */
 const STORAGE_KEY = 'admin_carwash_data_v3';
-const SCRIPT_VERSION = 'v3.0.4-oct2026';
+const SCRIPT_VERSION = 'v3.0.5-oct2026';
 
 
 /* ==================================================
@@ -2271,16 +2271,16 @@ function pagarLavador(nombre, monto) {
     const m = parseFloat(monto) || 0;
     if (m <= 0) return;
 
-    if (!confirm(`¿Pagar $${m.toFixed(2)} a ${nombre}?`)) return;
-
-    appData.pagosLavadores.push({
-        id: 'pag_' + Date.now(), 
-        lavador: nombre, 
-        monto: m,
-        fecha: new Date().toLocaleDateString(),
-        hora: new Date().toLocaleTimeString([], { hour: '2-digit', minute: '2-digit' })
+    showAppConfirm(`¿Confirmas el pago de $${m.toFixed(2)} al lavador "${nombre}"?`, () => {
+        appData.pagosLavadores.push({
+            id: 'pag_' + Date.now(), 
+            lavador: nombre, 
+            monto: m,
+            fecha: new Date().toLocaleDateString(),
+            hora: new Date().toLocaleTimeString([], { hour: '2-digit', minute: '2-digit' })
+        });
+        saveData();
     });
-    saveData();
 }
 
 function renderPagosCaja() {
