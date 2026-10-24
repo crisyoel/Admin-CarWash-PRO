@@ -2284,42 +2284,45 @@ function pagarLavador(nombre, monto) {
 }
 
 function renderPagosCaja() {
-    const c = document.getElementById('pagosLavadoresCaja'); 
+    const c = document.getElementById('pagosLavadoresCaja');
     if (!c) return;
+
     const g = calculateGlobalTotals();
 
-    if (!appData.lavadores.length) { 
-        c.innerHTML = '<p style="text-align:center;color:var(--gray-400);padding:10px;">Registra lavadores primero.</p>'; 
-        return; 
+    if (!appData.lavadores.length) {
+        c.innerHTML = '<p style="text-align:center;color:var(--gray-400);padding:10px;">Registra lavadores primero.</p>';
+        return;
     }
 
     let html = '';
+
     appData.lavadores.forEach(lav => {
         const gan = g.ganadoPorLavador[lav] || 0;
-        const prop = g.propinasPorLavador[lav] || 0;
-        const totalLav = g.totalLavadorConPropina[lav] || 0;
+        const bruto = (appData.registros || []).reduce((total, r) => total + ((r.lavador || 'Sin Asignar') === lav ? (parseFloat(r.monto) || 0) : 0), 0);
         const pag = g.yaPagado[lav] || 0;
         const pen = g.pendiente[lav] || 0;
         const cnt = g.autosPorLavador[lav] || 0;
 
-        const btn = pen > 0 && !appData.cajaCerrada
-            ? `<button class="btn btn-success" style="padding:6px 12px;font-size:0.8rem;width:auto;" onclick="pagarLavador('${lav}', ${pen.toFixed(2)})"><i class="fa-solid fa-hand-holding-dollar"></i> Pagar $${pen.toFixed(2)}</button>`
-            : `<span class="badge badge-pending" style="background:var(--gray-200); color:var(--gray-700);">Pagado ($${pag.toFixed(2)})</span>`;
+        const puedePagar = pen > 0 && !appData.cajaCerrada;
 
-        const propinaText = prop > 0 ? ` + Propina: $${prop.toFixed(2)}` : '';
+        const btn = puedePagar
+            ? ` <button class="btn" style="padding:6px 12px;font-size:0.8rem;width:auto;background:rgba(34,197,94,0.12);border:2px solid #16a34a;color:#16a34a;font-weight:700;" onclick="pagarLavador('${lav}', ${pen.toFixed(2)})"><i class="fa-solid fa-hand-holding-dollar"></i> Pagar $${pen.toFixed(2)}</button>`
+            : `<button class="btn" disabled style="padding:6px 12px;font-size:0.8rem;width:auto;background:var(--gray-200);color:var(--gray-500);border-color:var(--gray-200);opacity:1;cursor:default;"><i class="fa-solid fa-check"></i> Pagado $${pag.toFixed(2)}</button>`;
 
         html += `
             <div class="list-card">
                 <div class="list-card-info">
                     <h4>${lav} <span style="font-size:0.7rem;color:var(--gray-400);">· ${cnt} ${cnt === 1 ? 'auto' : 'autos'}</span></h4>
-                    <p style="font-size:0.75rem;">Ganado: $${gan.toFixed(2)}${propinaText} (Total: $${totalLav.toFixed(2)}) · Entregado: $${pag.toFixed(2)}</p>
-                    ${pen > 0 ? `<p style="font-size:0.75rem;color:var(--danger);font-weight:700;">POR PAGAR: $${pen.toFixed(2)}</p>` : `<p style="font-size:0.75rem;color:var(--gray-400);">Sin saldo pendiente</p>`}
+                    <p style="font-size:0.75rem;">Total generado: $${bruto.toFixed(2)}</p>
                 </div>
                 ${btn}
             </div>`;
     });
+
     c.innerHTML = html;
 }
+
+
 
 /* ==================================================
    SECCIÓN: CIERRE Y CONTROL DE CAJA
