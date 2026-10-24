@@ -1773,7 +1773,7 @@ select.form-control {
 .card-fondo-caja .card-bg-icon {
     position: absolute;
     top: 27px;
-    right: 265px;
+    right: 245px;
     font-size: 20px;
     color: var(--primary); /* Azul primario (puedes cambiarlo a var(--dark) si lo prefieres) */
     opacity: 0.8;        /* Difuminado suave para que no compita con el texto */
