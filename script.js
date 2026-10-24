@@ -2296,12 +2296,16 @@ function renderPagosCaja() {
 
     let html = '';
 
-    appData.lavadores.forEach(lav => {
+    
+appData.lavadores.forEach(lav => {
         const gan = g.ganadoPorLavador[lav] || 0;
         const bruto = (appData.registros || []).reduce((total, r) => total + ((r.lavador || 'Sin Asignar') === lav ? (parseFloat(r.monto) || 0) : 0), 0);
         const pag = g.yaPagado[lav] || 0;
         const pen = g.pendiente[lav] || 0;
         const cnt = g.autosPorLavador[lav] || 0;
+
+        // Ocultar lavadores que no trabajaron y no tienen saldo pendiente
+        if (cnt === 0 && pen <= 0) return;
 
         const puedePagar = pen > 0 && !appData.cajaCerrada;
 
@@ -2313,11 +2317,12 @@ function renderPagosCaja() {
             <div class="list-card">
                 <div class="list-card-info">
                     <h4>${lav} <span style="font-size:0.7rem;color:var(--gray-400);">· ${cnt} ${cnt === 1 ? 'auto' : 'autos'}</span></h4>
-                    <p style="font-size:0.75rem;">Total generado: $${bruto.toFixed(2)}</p>
+                    <p style="font-size:0.75rem;">Generado: $${bruto.toFixed(2)}</p>
                 </div>
                 ${btn}
             </div>`;
     });
+
 
     c.innerHTML = html;
 }
