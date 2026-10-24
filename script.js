@@ -7,7 +7,7 @@
    CONTROL DE VERSIÓN OFICIAL - VERSIÓN 3.0 PRO
    ================================================== */
 const STORAGE_KEY = 'admin_carwash_data_v3';
-const SCRIPT_VERSION = 'v3-pro-oct2026';
+const SCRIPT_VERSION = 'v3.0.4-oct2026';
 
 
 /* ==================================================
@@ -2317,7 +2317,7 @@ appData.lavadores.forEach(lav => {
             <div class="list-card">
                 <div class="list-card-info">
                     <h4>${lav} <span style="font-size:0.7rem;color:var(--gray-400);">· ${cnt} ${cnt === 1 ? 'auto' : 'autos'}</span></h4>
-                    <p style="font-size:0.75rem;">Generado: $${bruto.toFixed(2)}</p>
+                    <p style="font-size:0.75rem;">Total: $${bruto.toFixed(2)}</p>
                 </div>
                 ${btn}
             </div>`;
