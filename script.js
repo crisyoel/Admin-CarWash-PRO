@@ -2296,7 +2296,7 @@ function renderPagosCaja() {
 
     let html = '';
 
-    
+
 appData.lavadores.forEach(lav => {
         const gan = g.ganadoPorLavador[lav] || 0;
         const bruto = (appData.registros || []).reduce((total, r) => total + ((r.lavador || 'Sin Asignar') === lav ? (parseFloat(r.monto) || 0) : 0), 0);
@@ -2310,7 +2310,7 @@ appData.lavadores.forEach(lav => {
         const puedePagar = pen > 0 && !appData.cajaCerrada;
 
         const btn = puedePagar
-            ? ` <button class="btn" style="padding:6px 12px;font-size:0.8rem;width:auto;background:rgba(34,197,94,0.12);border:2px solid #16a34a;color:#16a34a;font-weight:700;" onclick="pagarLavador('${lav}', ${pen.toFixed(2)})"><i class="fa-solid fa-hand-holding-dollar"></i> Pagar $${pen.toFixed(2)}</button>`
+            ? ` <button class="btn" style="padding:6px 12px;font-size:0.8rem;width:auto;background:rgba(34,197,94,0.12);border:1px solid #16a34a;color:#16a34a;font-weight:700;" onclick="pagarLavador('${lav}', ${pen.toFixed(2)})"><i class="fa-solid fa-hand-holding-dollar"></i> Pagar $${pen.toFixed(2)}</button>`
             : `<button class="btn" disabled style="padding:6px 12px;font-size:0.8rem;width:auto;background:var(--gray-200);color:var(--gray-500);border-color:var(--gray-200);opacity:1;cursor:default;"><i class="fa-solid fa-check"></i> Pagado $${pag.toFixed(2)}</button>`;
 
         html += `
@@ -2523,7 +2523,7 @@ function actualizarTickerDescuentos() {
     const ajustes = [...descuentosClientes, ...salidasAdmin];
 
     if (!ajustes.length) {
-        ticker.textContent = 'Sin descuentos ni ajustes hoy';
+        ticker.textContent = 'Sin descuentos hoy';
         return;
     }
 
