@@ -7,7 +7,7 @@
    CONTROL DE VERSIÓN OFICIAL - VERSIÓN 3.0 PRO
    ================================================== */
 const STORAGE_KEY = 'admin_carwash_data_v3';
-const SCRIPT_VERSION = 'v3.0.5-oct2026';
+const SCRIPT_VERSION = 'v3.0.6-oct2026';
 
 
 /* ==================================================
@@ -485,20 +485,34 @@ function calculateGlobalTotals() {
         totalAdminBruto += gerenciaBruta;
     });
 
-    const yaPagado = typeof calcularPagosRealizados === 'function' ? calcularPagosRealizados() : {};
-    const pendiente = {};
+    
+const yaPagado = typeof calcularPagosRealizados === 'function' ? calcularPagosRealizados() : {};
+const prestamosPorLavador = {};
 
-    Object.keys(totalLavadorConPropina).forEach(l => { 
-        // Se calcula el pendiente considerando únicamente su ganancia directa por lavados
-        pendiente[l] = Math.max(0, totalLavadorConPropina[l] - (yaPagado[l] || 0)); 
-    });
+(appData.gastos || []).forEach(g => {
+    if (g.tipoMovimiento === 'LAVADOR' && g.lavador) {
+        prestamosPorLavador[g.lavador] =
+            (prestamosPorLavador[g.lavador] || 0) + (parseFloat(g.monto) || 0);
+    }
+});
+
+const pendiente = {};
+
+Object.keys(totalLavadorConPropina).forEach(l => {
+    const ganado = totalLavadorConPropina[l] || 0;
+    const pagado = yaPagado[l] || 0;
+    const prestamos = prestamosPorLavador[l] || 0;
+
+    pendiente[l] = Math.max(0, ganado - pagado - prestamos);
+});
 
     return {
         ganadoPorLavador, 
         propinasPorLavador,
         totalLavadorConPropina,
         autosPorLavador, 
-        yaPagado, 
+        yaPagado,
+        prestamosPorLavador,
         pendiente,
         totalLavadoresGanado: totalLav,
         totalPropinas: totalProp,
@@ -2302,6 +2316,7 @@ appData.lavadores.forEach(lav => {
         const bruto = (appData.registros || []).reduce((total, r) => total + ((r.lavador || 'Sin Asignar') === lav ? (parseFloat(r.monto) || 0) : 0), 0);
         const pag = g.yaPagado[lav] || 0;
         const pen = g.pendiente[lav] || 0;
+        const prestamo = g.prestamosPorLavador[lav] || 0;
         const cnt = g.autosPorLavador[lav] || 0;
 
         // Ocultar lavadores que no trabajaron y no tienen saldo pendiente
@@ -2310,14 +2325,17 @@ appData.lavadores.forEach(lav => {
         const puedePagar = pen > 0 && !appData.cajaCerrada;
 
         const btn = puedePagar
-            ? ` <button class="btn" style="padding:6px 12px;font-size:0.8rem;width:auto;background:rgba(34,197,94,0.12);border:1px solid #16a34a;color:#16a34a;font-weight:700;" onclick="pagarLavador('${lav}', ${pen.toFixed(2)})"><i class="fa-solid fa-hand-holding-dollar"></i> Pagar $${pen.toFixed(2)}</button>`
-            : `<button class="btn" disabled style="padding:6px 12px;font-size:0.8rem;width:auto;background:var(--gray-200);color:var(--gray-500);border-color:var(--gray-200);opacity:1;cursor:default;"><i class="fa-solid fa-check"></i> Pagado $${pag.toFixed(2)}</button>`;
+            ? ` <button class="btn" style="padding:6px 12px;font-size:0.8rem;width:auto;background:rgba(20,184,166,0.18);border:1px solid #14b8a6;color:#0d9488;font-weight:700;" onclick="pagarLavador('${lav}', ${pen.toFixed(2)})"><i class="fa-solid fa-hand-holding-dollar"></i> $${pen.toFixed(2)}</button>`
+            : `<button class="btn" disabled style="padding:6px 12px;font-size:0.8rem;width:auto;background:var(--gray-200);color:var(--gray-500);border-color:var(--gray-200);opacity:1;cursor:default;"><i class="fa-solid fa-check"></i> $${pag.toFixed(2)}</button>`;
 
         html += `
             <div class="list-card">
                 <div class="list-card-info">
                     <h4>${lav} <span style="font-size:0.7rem;color:var(--gray-400);">· ${cnt} ${cnt === 1 ? 'auto' : 'autos'}</span></h4>
-                    <p style="font-size:0.75rem;">Total: $${bruto.toFixed(2)}</p>
+                    <div style="display:flex;align-items:center;gap:12px;flex-wrap:wrap;font-size:0.75rem;color:#94a3b8;font-weight:400 !important;">
+    <span style="font-weight:400 !important;color:#94a3b8;">Total: $${bruto.toFixed(2)}</span>
+    ${prestamo > 0 ? `<span style="font-weight:400 !important;color:#94a3b8;">Desc: $${prestamo.toFixed(2)}</span>` : ''}
+</div>
                 </div>
                 ${btn}
             </div>`;
