@@ -3026,17 +3026,19 @@ body.custom-select-open {
 }
 
 
-/* AJUSTE RESPONSIVE DEL MODAL DE YAPPY */
+/* MODAL YAPPY: ALTURA CONTROLADA Y LISTA CON SCROLL */
 #modalYappy {
     padding: 12px;
     box-sizing: border-box;
     overflow: hidden;
 }
 
-#modalYappy .modal-md-custom {
+#modalYappy .modal.modal-md-custom {
     display: flex;
     flex-direction: column;
     width: 100%;
+    height: 90vh;
+    height: 90dvh;
     max-height: 90vh;
     max-height: 90dvh;
     min-height: 0;
@@ -3044,8 +3046,14 @@ body.custom-select-open {
     box-sizing: border-box;
 }
 
+#modalYappy .modal-title,
+#modalYappy .yappy-summary-box,
+#modalYappy .modal-actions {
+    flex-shrink: 0;
+}
+
 #modalYappy #yappyListContainer {
-    flex: 1 1 auto;
+    flex: 1 1 0;
     min-height: 0;
     max-height: none;
     overflow-y: auto;
@@ -3055,5 +3063,6 @@ body.custom-select-open {
 }
 
 #modalYappy .modal-actions {
-    flex-shrink: 0;
+    margin-top: 10px;
+    padding-bottom: 2px;
 }
