@@ -3075,3 +3075,48 @@ body.custom-select-open {
     width: 0 !important;
     height: 0 !important;
 }
+
+/* ANIMACIÓN PREMIUM DEL MODAL YAPPY */
+#modalYappy {
+    background: rgba(15, 23, 42, 0.52);
+    backdrop-filter: blur(5px);
+    -webkit-backdrop-filter: blur(5px);
+    transition: opacity 0.30s cubic-bezier(0.22, 1, 0.36, 1);
+}
+
+#modalYappy.open {
+    opacity: 1;
+}
+
+#modalYappy.yappy-closing {
+    opacity: 0;
+    pointer-events: none;
+}
+
+#modalYappy .modal.modal-md-custom {
+    opacity: 0;
+    transform: translateY(14px) scale(0.965);
+    transform-origin: center center;
+    transition:
+        transform 0.30s cubic-bezier(0.22, 1, 0.36, 1),
+        opacity 0.24s ease;
+    will-change: transform, opacity;
+}
+
+#modalYappy.open .modal.modal-md-custom {
+    opacity: 1;
+    transform: translateY(0) scale(1);
+}
+
+#modalYappy.yappy-closing .modal.modal-md-custom {
+    opacity: 0;
+    transform: translateY(6px) scale(0.985);
+    transition-duration: 0.20s;
+}
+
+@media (prefers-reduced-motion: reduce) {
+    #modalYappy,
+    #modalYappy .modal.modal-md-custom {
+        transition-duration: 0.01ms;
+    }
+}
