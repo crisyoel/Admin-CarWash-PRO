@@ -3060,6 +3060,14 @@ body.custom-select-open {
     overflow-x: hidden;
     -webkit-overflow-scrolling: touch;
     overscroll-behavior-y: contain;
+
+    /* Ocultar la barra lateral sin desactivar el scroll */
+    scrollbar-width: none;
+    -ms-overflow-style: none;
+}
+
+#modalYappy #yappyListContainer::-webkit-scrollbar {
+    display: none;
 }
 
 #modalYappy .modal-actions {
