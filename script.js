@@ -4,10 +4,10 @@
    ================================================== */
 
 /* ==================================================
-   CONTROL DE VERSIÓN OFICIAL - VERSIÓN 3.0 PRO
+   CONTROL DE VERSIÓN OFICIAL - VERSIÓN 3.1.0 PRO
    ================================================== */
 const STORAGE_KEY = 'admin_carwash_data_v3';
-const SCRIPT_VERSION = 'v3.0.6-oct2026';
+const SCRIPT_VERSION = 'v3.1.0-oct2026';
 
 
 /* ==================================================
@@ -485,7 +485,7 @@ function calculateGlobalTotals() {
         totalAdminBruto += gerenciaBruta;
     });
 
-    
+
 const yaPagado = typeof calcularPagosRealizados === 'function' ? calcularPagosRealizados() : {};
 const prestamosPorLavador = {};
 
@@ -1765,19 +1765,14 @@ function openModalYappy() {
 
     if (!modal) return;
 
-    // 1. Obtener registros del día
     const registros = appData?.registros || appData?.autos || [];
 
-    // 2. Filtrar pagos por Yappy, Yape O Mixtos que tengan monto en Yappy > 0 y estén PAGADOS
     const pagosYappy = registros.filter(r => {
         const fp = (r.formaPago || r.metodoPago || '').toLowerCase();
         const est = (r.estadoPago || r.estado || '').toLowerCase();
 
-        const esYappyPuro = (fp === 'yappy' || fp === 'yape');
-        const esMixtoConYappy = (fp === 'mixto' && (parseFloat(r.montoYappyMixto) || 0) > 0);
-        const estaPagado = (est === 'pagado' || est === 'completado' || est === 'cobrado');
-
-        return (esYappyPuro || esMixtoConYappy) && estaPagado;
+        return (fp === 'yappy' || fp === 'yape') &&
+            (est === 'pagado' || est === 'completado' || est === 'cobrado');
     });
 
     let totalYappySum = 0;
@@ -1788,9 +1783,9 @@ function openModalYappy() {
     if (pagosYappy.length === 0) {
         if (container) {
             container.innerHTML = `
-                <div style="display: flex; flex-direction: column; align-items: center; justify-content: center; padding: 2.5rem 1rem; text-align: center;">
-                    <i class="fa-solid fa-mobile-screen-button" style="font-size: 3rem; color: #cbd5e1; margin-bottom: 12px;"></i>
-                    <p style="font-size: 0.85rem; color: #94a3b8; margin: 0; font-weight: 500;">
+                <div style="display:flex; flex-direction:column; align-items:center; justify-content:center; padding:2.5rem 1rem; text-align:center;">
+                    <i class="fa-solid fa-mobile-screen-button" style="font-size:3rem; color:#cbd5e1; margin-bottom:12px;"></i>
+                    <p style="font-size:0.85rem; color:#94a3b8; margin:0; font-weight:500;">
                         Sin pagos por Yappy.
                     </p>
                 </div>
@@ -1798,48 +1793,35 @@ function openModalYappy() {
         }
     } else {
         pagosYappy.forEach(r => {
-            const fp = (r.formaPago || '').toLowerCase();
-
-            // Si es pago mixto, tomamos r.montoYappyMixto; si es Yappy puro, calculamos el total del servicio + propina
-            const mMontoYappy = fp === 'mixto' 
-                ? (parseFloat(r.montoYappyMixto) || 0) 
-                : getMontoCobro(r); 
-
+            const mMonto = parseFloat(r.monto || r.precio || 0);
             const mPropina = parseFloat(r.propina || 0);
-            const mTotal = mMontoYappy; // Monto real que entró por Yappy en esta transacción
-
-            // PRIORIDAD HORA
+            const mTotal = mMonto + mPropina;
             const horaMostrar = r.horaCobro || r.hora || r.horaIngreso || 'N/A';
 
             totalYappySum += mTotal;
+
             if (r.yappyVerificado) {
                 totalVerificadosSum += mTotal;
             }
 
-            // DESGLOSE SIN DECIMALES
-            const mMontoInt = Math.floor(mMontoYappy);
+            const mMontoInt = Math.floor(mMonto);
             const mPropinaInt = Math.floor(mPropina);
 
-            // HTML PURAS CLASES
             const item = document.createElement('div');
             item.className = 'yappy-card-item';
+
             item.innerHTML = `
-                <!-- LADO IZQUIERDO: Placa arriba -->
                 <div class="yappy-item-info">
                     <div class="yappy-header-row">
-                        <strong class="yappy-item-placa">${r.placa || r.auto || 'Sin Placa'}</strong>
-                        ${fp === 'mixto' ? '<span class="badge" style="font-size: 0.55rem; background: #e0f2fe; color: #0369a1; padding: 1px 4px; border-radius: 4px;">Mixto</span>' : ''}
+                        <strong class="yappy-item-placa">${r.placa || 'Sin Placa'}</strong>
                     </div>
-                    <!-- SUB-ROW: Serv, Ícono de Monedas + Propina, y Hora -->
-                    <div class="yappy-sub-row" style="display: flex; align-items: center; gap: 8px; margin-top: 2px;">
-                        ${mPropina > 0 
-                            ? `<span class="yappy-item-desglose">Yappy: $${mMontoInt} <i class="fa-solid fa-coins" style="margin-left: 4px; margin-right: 2px; color: #94a3b8;"></i>$${mPropinaInt}</span>` 
+                    <div class="yappy-sub-row" style="display:flex; align-items:center; gap:8px; margin-top:2px;">
+                        ${mPropina > 0
+                            ? `<span class="yappy-item-desglose">Serv: $${mMontoInt} <i class="fa-solid fa-coins" style="margin-left:4px; margin-right:2px; color:#94a3b8;"></i>$${mPropinaInt}</span>`
                             : `<span class="yappy-item-desglose">${r.modelo || r.tipoVehiculo || 'Lavado General'}</span>`}
                         <span class="yappy-item-hora"><i class="fa-regular fa-clock"></i> ${horaMostrar}</span>
                     </div>
                 </div>
-
-                <!-- LADO DERECHO: Monto principal y Checkbox -->
                 <div class="yappy-item-right">
                     <strong class="yappy-item-monto">$${mTotal.toFixed(2)}</strong>
                     <label class="yappy-checkbox-wrapper">
@@ -1848,25 +1830,36 @@ function openModalYappy() {
                     </label>
                 </div>
             `;
+
             if (container) container.appendChild(item);
         });
     }
 
-    // TOTALES CON DECIMALES
     if (totalEl) totalEl.textContent = `$${totalYappySum.toFixed(2)}`;
     if (verificadosEl) verificadosEl.textContent = `$${totalVerificadosSum.toFixed(2)}`;
 
-    modal.classList.remove('is-hidden', 'display-none');
+    modal.classList.remove('is-hidden', 'display-none', 'yappy-closing');
+
+    // Permite que el navegador aplique primero el estado inicial.
+    void modal.offsetWidth;
+
     modal.classList.add('open');
 }
 
-
 function closeModalYappy() {
     const modal = document.getElementById('modalYappy');
-    if (modal) {
-        modal.classList.remove('open');
+
+    if (!modal || modal.classList.contains('is-hidden')) return;
+    if (modal.classList.contains('yappy-closing')) return;
+
+    modal.classList.remove('open');
+    modal.classList.add('yappy-closing');
+
+    // Oculta el modal después de terminar la animación.
+    setTimeout(() => {
+        modal.classList.remove('yappy-closing');
         modal.classList.add('is-hidden');
-    }
+    }, 300);
 }
 
 function toggleVerificadoYappy(id) {
