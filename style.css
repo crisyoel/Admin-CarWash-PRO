@@ -3024,3 +3024,36 @@ body.custom-select-open {
     font-weight: 700;
     line-height: 1.3;
 }
+
+
+/* AJUSTE RESPONSIVE DEL MODAL DE YAPPY */
+#modalYappy {
+    padding: 12px;
+    box-sizing: border-box;
+    overflow: hidden;
+}
+
+#modalYappy .modal-md-custom {
+    display: flex;
+    flex-direction: column;
+    width: 100%;
+    max-height: 90vh;
+    max-height: 90dvh;
+    min-height: 0;
+    overflow: hidden;
+    box-sizing: border-box;
+}
+
+#modalYappy #yappyListContainer {
+    flex: 1 1 auto;
+    min-height: 0;
+    max-height: none;
+    overflow-y: auto;
+    overflow-x: hidden;
+    -webkit-overflow-scrolling: touch;
+    overscroll-behavior-y: contain;
+}
+
+#modalYappy .modal-actions {
+    flex-shrink: 0;
+}
