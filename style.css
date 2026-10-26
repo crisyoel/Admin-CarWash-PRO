@@ -3026,19 +3026,18 @@ body.custom-select-open {
 }
 
 
-/* MODAL YAPPY: ALTURA CONTROLADA Y LISTA CON SCROLL */
+
+/* AJUSTE RESPONSIVE DEL MODAL DE YAPPY */
 #modalYappy {
     padding: 12px;
     box-sizing: border-box;
     overflow: hidden;
 }
 
-#modalYappy .modal.modal-md-custom {
+#modalYappy .modal-md-custom {
     display: flex;
     flex-direction: column;
     width: 100%;
-    height: 90vh;
-    height: 90dvh;
     max-height: 90vh;
     max-height: 90dvh;
     min-height: 0;
@@ -3046,31 +3045,33 @@ body.custom-select-open {
     box-sizing: border-box;
 }
 
-#modalYappy .modal-title,
-#modalYappy .yappy-summary-box,
-#modalYappy .modal-actions {
-    flex-shrink: 0;
-}
-
 #modalYappy #yappyListContainer {
-    flex: 1 1 0;
+    flex: 1 1 auto;
     min-height: 0;
     max-height: none;
     overflow-y: auto;
     overflow-x: hidden;
     -webkit-overflow-scrolling: touch;
     overscroll-behavior-y: contain;
-
-    /* Ocultar la barra lateral sin desactivar el scroll */
-    scrollbar-width: none;
-    -ms-overflow-style: none;
-}
-
-#modalYappy #yappyListContainer::-webkit-scrollbar {
-    display: none;
 }
 
 #modalYappy .modal-actions {
-    margin-top: 10px;
-    padding-bottom: 2px;
+    flex-shrink: 0;
+}
+
+
+/* OCULTAR BARRAS DE SCROLL DENTRO DE LOS PAGOS YAPPY */
+#modalYappy .modal-scroll-list,
+#modalYappy #yappyListContainer,
+#modalYappy #yappyListContainer * {
+    scrollbar-width: none !important;
+    -ms-overflow-style: none !important;
+}
+
+#modalYappy .modal-scroll-list::-webkit-scrollbar,
+#modalYappy #yappyListContainer::-webkit-scrollbar,
+#modalYappy #yappyListContainer *::-webkit-scrollbar {
+    display: none !important;
+    width: 0 !important;
+    height: 0 !important;
 }
