@@ -1813,7 +1813,7 @@ function openModalYappy() {
             item.innerHTML = `
                 <div class="yappy-item-info">
                     <div class="yappy-header-row">
-                        <strong class="yappy-item-placa">${r.placa || 'Sin Placa'}</strong>
+                        <strong class="yappy-item-placa">${r.placa || r.auto || 'Sin Placa'}</strong>
                     </div>
                     <div class="yappy-sub-row" style="display:flex; align-items:center; gap:8px; margin-top:2px;">
                         ${mPropina > 0
