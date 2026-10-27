@@ -4,10 +4,10 @@
    ================================================== */
 
 /* ==================================================
-   CONTROL DE VERSIÓN OFICIAL - VERSIÓN 3.1.0 PRO
+   CONTROL DE VERSIÓN OFICIAL - VERSIÓN 3.1.1 PRO
    ================================================== */
 const STORAGE_KEY = 'admin_carwash_data_v3';
-const SCRIPT_VERSION = 'v3.1.0-oct2026';
+const SCRIPT_VERSION = 'v3.1.1-oct2026';
 
 
 /* ==================================================
@@ -1770,8 +1770,13 @@ function openModalYappy() {
     const pagosYappy = registros.filter(r => {
         const fp = (r.formaPago || r.metodoPago || '').toLowerCase();
         const est = (r.estadoPago || r.estado || '').toLowerCase();
+        const montoYappyMixto = Math.max(0, parseFloat(r.montoYappyMixto) || 0);
 
-        return (fp === 'yappy' || fp === 'yape') &&
+        // Incluye pagos completos por Yappy y la fracción Yappy de pagos mixtos.
+        const tieneMontoYappy = fp === 'yappy' || fp === 'yape' ||
+            (fp === 'mixto' && montoYappyMixto > 0);
+
+        return tieneMontoYappy &&
             (est === 'pagado' || est === 'completado' || est === 'cobrado');
     });
 
@@ -1793,9 +1798,14 @@ function openModalYappy() {
         }
     } else {
         pagosYappy.forEach(r => {
+            const esMixto = (r.formaPago || r.metodoPago || '').toLowerCase() === 'mixto';
             const mMonto = parseFloat(r.monto || r.precio || 0);
             const mPropina = parseFloat(r.propina || 0);
-            const mTotal = mMonto + mPropina;
+            // En pagos mixtos, Yappy solo recibe la fracción registrada en montoYappyMixto.
+            // Se mantiene igual que el cálculo del resumen de caja.
+            const mTotal = esMixto
+                ? Math.max(0, parseFloat(r.montoYappyMixto) || 0)
+                : mMonto + mPropina;
             const horaMostrar = r.horaCobro || r.hora || r.horaIngreso || 'N/A';
 
             totalYappySum += mTotal;
@@ -1816,9 +1826,11 @@ function openModalYappy() {
                         <strong class="yappy-item-placa">${r.placa || r.auto || 'Sin Placa'}</strong>
                     </div>
                     <div class="yappy-sub-row" style="display:flex; align-items:center; gap:8px; margin-top:2px;">
-                        ${mPropina > 0
-                            ? `<span class="yappy-item-desglose">Serv: $${mMontoInt} <i class="fa-solid fa-coins" style="margin-left:4px; margin-right:2px; color:#94a3b8;"></i>$${mPropinaInt}</span>`
-                            : `<span class="yappy-item-desglose">${r.modelo || r.tipoVehiculo || 'Lavado General'}</span>`}
+                        ${esMixto
+                            ? `<span class="yappy-item-desglose">Pago mixto · Yappy: $${mTotal.toFixed(2)}</span>`
+                            : mPropina > 0
+                                ? `<span class="yappy-item-desglose">Serv: $${mMontoInt} <i class="fa-solid fa-coins" style="margin-left:4px; margin-right:2px; color:#94a3b8;"></i>$${mPropinaInt}</span>`
+                                : `<span class="yappy-item-desglose">${r.modelo || r.tipoVehiculo || 'Lavado General'}</span>`}
                         <span class="yappy-item-hora"><i class="fa-regular fa-clock"></i> ${horaMostrar}</span>
                     </div>
                 </div>
@@ -3348,4 +3360,148 @@ function confirmarPagoMixto() {
     if (inputYappy) inputYappy.value = '';
 
     saveData(); // Guarda y actualiza toda la interfaz
+}
+
+/* ==================================================
+   MODAL DE DESCUENTOS DEL DÍA
+   Muestra el detalle sin alterar cálculos ni movimientos.
+   ================================================== */
+function abrirModalDescuentos() {
+    const hoy = new Date().toLocaleDateString();
+    const modalId = 'modalDetalleDescuentos';
+    let modal = document.getElementById(modalId);
+
+    const descuentosClientes = (appData.registros || [])
+        .filter(r => r.fecha === hoy && (parseFloat(r.descuento) || 0) > 0)
+        .map(r => ({
+            categoria: 'Descuento de lavado',
+            icono: 'fa-car-side',
+            nombre: r.clienteNombre || r.clienteName || 'Cliente',
+            monto: Math.min(Math.max(0, parseFloat(r.monto) || 0), Math.max(0, parseFloat(r.descuento) || 0)),
+            placa: r.placa || r.auto || '',
+            lavador: r.lavador || '',
+            detalle: [r.tipoVehiculo || r.vehiculoTipo || '', r.servicio || r.tipoLavado || 'Lavado'].filter(Boolean).join(' · '),
+            hora: r.horaCobro || r.hora || r.horaIngreso || ''
+        }));
+
+    const gastosHoy = (appData.gastos || [])
+        .filter(g => !g.fecha || g.fecha === hoy);
+
+    const salidasAdmin = gastosHoy
+        .filter(g => (g.tipoMovimiento || 'GENERAL') === 'ADMIN')
+        .map(g => ({
+            categoria: 'Salida de administración',
+            icono: 'fa-receipt',
+            nombre: g.concepto || 'Gasto de administración',
+            monto: Math.max(0, parseFloat(g.monto) || 0),
+            placa: '',
+            lavador: '',
+            detalle: 'Salida registrada',
+            hora: g.timestamp || ''
+        }));
+
+    const prestamosLavadores = gastosHoy
+        .filter(g => g.tipoMovimiento === 'LAVADOR')
+        .map(g => ({
+            categoria: 'Préstamo / adelanto a lavador',
+            icono: 'fa-hand-holding-dollar',
+            nombre: g.lavador || 'Lavador',
+            monto: Math.max(0, parseFloat(g.monto) || 0),
+            placa: '',
+            lavador: '',
+            detalle: g.concepto || 'Dinero entregado al lavador',
+            hora: g.timestamp || ''
+        }));
+
+    const ajustesBanner = [...descuentosClientes, ...salidasAdmin];
+    const totalBanner = ajustesBanner.reduce((s, item) => s + item.monto, 0);
+    const totalPrestamos = prestamosLavadores.reduce((s, item) => s + item.monto, 0);
+    const formatoDinero = n => '$' + (Number(n) || 0).toFixed(2);
+
+    if (!modal) {
+        modal = document.createElement('div');
+        modal.id = modalId;
+        modal.className = 'discount-detail-overlay is-hidden';
+        modal.innerHTML = `
+            <section class="discount-detail-modal" role="dialog" aria-modal="true" aria-labelledby="discountDetailTitle">
+                <header class="discount-detail-header">
+                    <div class="discount-detail-heading">
+                        <span class="discount-detail-icon"><i class="fa-solid fa-tags"></i></span>
+                        <div>
+                            <h2 id="discountDetailTitle">Descuentos de hoy</h2>
+                            <p id="discountDetailDate"></p>
+                        </div>
+                    </div>
+                    <button type="button" class="discount-detail-close" aria-label="Cerrar"><i class="fa-solid fa-xmark"></i></button>
+                </header>
+                <div class="discount-detail-summary">
+                    <div><span>Total de descuentos y salidas</span><strong id="discountDetailTotal">$0.00</strong></div>
+                    <small id="discountDetailCount">0 movimientos registrados</small>
+                </div>
+                <div class="discount-detail-list" id="discountDetailList"></div>
+                <div class="discount-detail-loans" id="discountDetailLoans"></div>
+                <footer class="discount-detail-footer"><button type="button" class="discount-detail-done">Listo</button></footer>
+            </section>`;
+        document.body.appendChild(modal);
+
+        const cerrar = () => {
+            modal.classList.remove('open');
+            modal.classList.add('discount-detail-closing');
+            setTimeout(() => {
+                modal.classList.remove('discount-detail-closing');
+                modal.classList.add('is-hidden');
+            }, 220);
+        };
+        modal.querySelector('.discount-detail-close').addEventListener('click', cerrar);
+        modal.querySelector('.discount-detail-done').addEventListener('click', cerrar);
+        modal.addEventListener('click', ev => { if (ev.target === modal) cerrar(); });
+    }
+
+    const lista = modal.querySelector('#discountDetailList');
+    const listaPrestamos = modal.querySelector('#discountDetailLoans');
+    modal.querySelector('#discountDetailDate').textContent = hoy;
+    modal.querySelector('#discountDetailTotal').textContent = formatoDinero(totalBanner);
+    modal.querySelector('#discountDetailCount').textContent =
+        `${ajustesBanner.length} movimiento${ajustesBanner.length === 1 ? '' : 's'} incluido${ajustesBanner.length === 1 ? '' : 's'} en el banner`;
+
+    const renderItem = item => `
+        <article class="discount-detail-item">
+            <span class="discount-detail-item-icon"><i class="fa-solid ${item.icono}"></i></span>
+            <div class="discount-detail-item-main">
+                <strong>${escapeHtml(item.nombre)}</strong>
+                <span class="discount-detail-category">${escapeHtml(item.categoria)}</span>
+                ${item.placa ? `<span class="discount-detail-meta"><i class="fa-solid fa-car"></i> ${escapeHtml(item.placa)}</span>` : ''}
+                ${item.detalle ? `<span class="discount-detail-meta">${escapeHtml(item.detalle)}</span>` : ''}
+                ${item.lavador ? `<span class="discount-detail-meta"><i class="fa-solid fa-user-gear"></i> Lavador: ${escapeHtml(item.lavador)}</span>` : ''}
+                ${item.hora ? `<span class="discount-detail-time"><i class="fa-regular fa-clock"></i> ${escapeHtml(item.hora)}</span>` : ''}
+            </div>
+            <strong class="discount-detail-amount">−${formatoDinero(item.monto)}</strong>
+        </article>`;
+
+    lista.innerHTML = ajustesBanner.length
+        ? ajustesBanner.map(renderItem).join('')
+        : `<div class="discount-detail-empty"><i class="fa-solid fa-receipt"></i><strong>No hay descuentos registrados</strong><span>Los descuentos de clientes y las salidas de administración aparecerán aquí.</span></div>`;
+
+    listaPrestamos.innerHTML = prestamosLavadores.length
+        ? `<div class="discount-detail-section-title"><i class="fa-solid fa-hand-holding-dollar"></i> Préstamos y adelantos a lavadores <strong>${formatoDinero(totalPrestamos)}</strong></div>${prestamosLavadores.map(renderItem).join('')}`
+        : '';
+
+    modal.classList.remove('is-hidden', 'discount-detail-closing');
+    void modal.offsetWidth;
+    modal.classList.add('open');
+}
+
+function inicializarClickBannerDescuentos() {
+    document.addEventListener('click', ev => {
+        const banner = ev.target.closest('.discount-banner');
+        if (!banner) return;
+        ev.preventDefault();
+        abrirModalDescuentos();
+    });
+}
+
+if (document.readyState === 'loading') {
+    document.addEventListener('DOMContentLoaded', inicializarClickBannerDescuentos, { once: true });
+} else {
+    inicializarClickBannerDescuentos();
 }
