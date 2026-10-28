@@ -1,2 +1,2 @@
 # Admin-CarWash-PRO
-v3.1.9
+v3.2.0
