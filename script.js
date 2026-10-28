@@ -4,10 +4,10 @@
    ================================================== */
 
 /* ==================================================
-   CONTROL DE VERSIÓN OFICIAL - VERSIÓN 3.2.0
+   CONTROL DE VERSIÓN OFICIAL - VERSIÓN 3.2.1
    ================================================== */
 const STORAGE_KEY = 'admin_carwash_data_v3';
-const SCRIPT_VERSION = 'v3.2.0-oct2026';
+const SCRIPT_VERSION = 'v3.2.1-oct2026';
 
 
 /* ==================================================
@@ -2339,7 +2339,7 @@ appData.lavadores.forEach(lav => {
                     <h4>${lav} <span style="font-size:0.7rem;color:var(--gray-400);">· ${cnt} ${cnt === 1 ? 'auto' : 'autos'}</span></h4>
                     <div style="display:flex;align-items:center;gap:12px;flex-wrap:wrap;font-size:0.75rem;color:#94a3b8;font-weight:400 !important;">
     <span style="font-weight:400 !important;color:#94a3b8;">Total: $${bruto.toFixed(2)}</span>
-    ${prestamo > 0 ? `<span style="font-weight:400 !important; background:rgba(239,68,68,0.10); border:1px solid rgba(239,68,68,0.25); padding:3px 7px; border-radius:8px; color:#dc2626; display:inline-block;">-$${prestamo.toFixed(2)}</span>` : ''}
+    ${prestamo > 0 ? `<span style="font-weight:400 !important; background:rgba(239,68,68,0.10);padding:2px 5px; border-radius:8px; color:#dc2626; display:inline-block;">-$${prestamo.toFixed(2)}</span>` : ''}
 </div>
                 </div>
                 ${btn}
