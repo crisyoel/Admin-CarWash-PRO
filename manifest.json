@@ -7,17 +7,20 @@
   "scope": "./",
   "dir": "ltr",
   "lang": "es",
-  "display": "standalone",
+  "display": "fullscreen",
   "display_override": [
     "window-controls-overlay",
     "standalone",
-    "minimal-ui"
+    "minimal-ui",
+    "fullscreen"
   ],
   "background_color": "#000000",
   "theme_color": "#0f172a",
   "orientation": "portrait",
   "categories": [
     "business",
+    "cars",
+    "finance",
     "utilities"
   ],
   "iarc_rating_id": "e84b075a-4f3b-42b6-89ba-0209f80720fe",
@@ -84,7 +87,9 @@
     {
       "action": "./index.html",
       "accept": {
-        "text/plain": [".txt"]
+        "text/plain": [
+          ".txt"
+        ]
       }
     }
   ],
@@ -98,9 +103,10 @@
     "action": "./index.html",
     "method": "GET",
     "params": {
-      "title": "title",
-      "text": "text",
-      "url": "url"
+      "title": "CarWash",
+      "text": "Control de lavado de autos",
+      "url": "https://crisyoel.github.io/Admin-CarWash-PRO/index.html",
+      "files": []
     }
   },
   "widgets": [
