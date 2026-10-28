@@ -2,6 +2,8 @@
   "id": "./index.html",
   "short_name": "CarWash",
   "name": "LavaAuto - Control de Servicios",
+  "version": "3.1.4",
+  "version_name": "3.1.4",
   "description": "Sistema completo de gestión y control operativo diario para administración de lavados de autos.",
   "start_url": "./index.html",
   "scope": "./",
