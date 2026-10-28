@@ -2339,7 +2339,7 @@ appData.lavadores.forEach(lav => {
                     <h4>${lav} <span style="font-size:0.7rem;color:var(--gray-400);">· ${cnt} ${cnt === 1 ? 'auto' : 'autos'}</span></h4>
                     <div style="display:flex;align-items:center;gap:12px;flex-wrap:wrap;font-size:0.75rem;color:#94a3b8;font-weight:400 !important;">
     <span style="font-weight:400 !important;color:#94a3b8;">Total: $${bruto.toFixed(2)}</span>
-    ${prestamo > 0 ? `<span style="font-weight:400 !important;color:#fef2f2;">Desc: $${prestamo.toFixed(2)}</span>` : ''}
+    ${prestamo > 0 ? `<span style="font-weight:400 !important;color:#dc2626;">-$${prestamo.toFixed(2)}</span>` : ''}
 </div>
                 </div>
                 ${btn}
