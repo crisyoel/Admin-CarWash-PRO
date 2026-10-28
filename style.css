@@ -3142,7 +3142,6 @@ body.custom-select-open {
     position: fixed; inset: 0; z-index: 1200;
     display: flex; align-items: center; justify-content: center;
     padding: 14px; background: rgba(15, 23, 42, 0.58);
-    backdrop-filter: blur(5px); -webkit-backdrop-filter: blur(5px);
     opacity: 0; transition: opacity 0.24s ease; box-sizing: border-box;
 }
 .discount-detail-overlay.is-hidden { display: none; }
@@ -3159,17 +3158,15 @@ body.custom-select-open {
     border-radius: 20px;
     background: #fff;
     box-shadow: 0 22px 60px rgba(15, 23, 42, .28);
-    transform: translateY(8px);
-    transition: transform .2s ease-out;
-    will-change: transform;
+    transform: none;
+    transition: none;
+    will-change: auto;
 }
-
 .discount-detail-overlay.open .discount-detail-modal {
-    transform: translateY(0);
+    transform: none;
 }
-
 .discount-detail-overlay.discount-detail-closing .discount-detail-modal {
-    transform: translateY(4px);
+    transform: none;
 }
 .discount-detail-header {
     display: flex; align-items: center; justify-content: space-between; gap: 12px;
