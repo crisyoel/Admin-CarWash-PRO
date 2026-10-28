@@ -3250,19 +3250,3 @@ body.custom-select-open {
 .discount-detail-list::-webkit-scrollbar, .discount-detail-loans::-webkit-scrollbar,
 .discount-detail-list *::-webkit-scrollbar, .discount-detail-loans *::-webkit-scrollbar { display: none; }
 @media (prefers-reduced-motion: reduce) { .discount-detail-overlay, .discount-detail-modal { transition-duration: .01ms; } }
-
-/* ==================================================
-    ETIQUETA DE DESCUENTO DE PRÉSTAMO EN LAVADORES
-   ================================================== */
-.badge-descuento-lavador {
-    display: inline-block;
-    background-color: rgba(239, 68, 68, 0.12); /* Fondo rojizo muy sutil y opaco */
-    color: #b91c1c;                           /* Texto rojizo opaco, no saturado */
-    font-size: 0.72rem;
-    font-weight: 700;
-    padding: 1px 6px;
-    border-radius: 6px;
-    border: 1px solid rgba(239, 68, 68, 0.2);  /* Bordecito rock / sutil */
-    margin-left: 4px;
-    white-space: nowrap;
-}
