@@ -4,10 +4,10 @@
    ================================================== */
 
 /* ==================================================
-   CONTROL DE VERSIÓN OFICIAL - VERSIÓN 3.1.8
+   CONTROL DE VERSIÓN OFICIAL - VERSIÓN 3.1.9
    ================================================== */
 const STORAGE_KEY = 'admin_carwash_data_v3';
-const SCRIPT_VERSION = 'v3.1.8-oct2026';
+const SCRIPT_VERSION = 'v3.1.9-oct2026';
 
 
 /* ==================================================
@@ -2340,7 +2340,7 @@ appData.lavadores.forEach(lav => {
                     <div style="display:flex;align-items:center;gap:12px;flex-wrap:wrap;font-size:0.75rem;color:#94a3b8;font-weight:400 !important;">
     <span style="font-weight:400 !important;color:#94a3b8;">Total: $${bruto.toFixed(2)}</span>
     ${prestamo > 0 ? `<span style="font-weight:400 !important;background: rgba(239, 68, 68, 0.10);
-border: 1px solid rgba(239, 68, 68, 0.25);
+border: 1px solid rgba(239, 68, 68, 0.25); padding:5px;border-radius:12px;
 color: #dc2626;">-$${prestamo.toFixed(2)}</span>` : ''}
 </div>
                 </div>
