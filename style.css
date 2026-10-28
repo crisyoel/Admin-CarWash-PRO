@@ -3149,15 +3149,28 @@ body.custom-select-open {
 .discount-detail-overlay.open { opacity: 1; }
 .discount-detail-overlay.discount-detail-closing { opacity: 0; pointer-events: none; }
 .discount-detail-modal {
-    display: flex; flex-direction: column; width: min(100%, 520px);
-    max-height: 90vh; max-height: 90dvh; min-height: 0; overflow: hidden;
-    border-radius: 20px; background: #fff;
+    display: flex;
+    flex-direction: column;
+    width: min(100%, 520px);
+    max-height: 90vh;
+    max-height: 90dvh;
+    min-height: 0;
+    overflow: hidden;
+    border-radius: 20px;
+    background: #fff;
     box-shadow: 0 22px 60px rgba(15, 23, 42, .28);
-    transform: translateY(14px) scale(.97);
-    transition: transform .28s cubic-bezier(.22, 1, .36, 1);
+    transform: translateY(8px);
+    transition: transform .2s ease-out;
+    will-change: transform;
 }
-.discount-detail-overlay.open .discount-detail-modal { transform: translateY(0) scale(1); }
-.discount-detail-overlay.discount-detail-closing .discount-detail-modal { transform: translateY(6px) scale(.985); }
+
+.discount-detail-overlay.open .discount-detail-modal {
+    transform: translateY(0);
+}
+
+.discount-detail-overlay.discount-detail-closing .discount-detail-modal {
+    transform: translateY(4px);
+}
 .discount-detail-header {
     display: flex; align-items: center; justify-content: space-between; gap: 12px;
     padding: 17px 18px; color: #fff;
