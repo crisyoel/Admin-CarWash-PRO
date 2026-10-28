@@ -2,20 +2,32 @@
   "id": "./index.html",
   "short_name": "CarWash",
   "name": "LavaAuto - Control de Servicios",
-  "version": "3.1.4",
-  "version_name": "3.1.4",
   "description": "Sistema completo de gestión y control operativo diario para administración de lavados de autos.",
   "start_url": "./index.html",
   "scope": "./",
   "dir": "ltr",
   "lang": "es",
   "display": "standalone",
+  "display_override": [
+    "window-controls-overlay",
+    "standalone",
+    "minimal-ui"
+  ],
   "background_color": "#000000",
   "theme_color": "#0f172a",
   "orientation": "portrait",
   "categories": [
     "business",
     "utilities"
+  ],
+  "iarc_rating_id": "e84b075a-4f3b-42b6-89ba-0209f80720fe",
+  "prefer_related_applications": false,
+  "related_applications": [
+    {
+      "platform": "play",
+      "url": "https://play.google.com/store/apps/details?id=com.lavaauto.app",
+      "id": "com.lavaauto.app"
+    }
   ],
   "icons": [
     {
@@ -44,6 +56,84 @@
           "type": "image/png"
         }
       ]
+    }
+  ],
+  "screenshots": [
+    {
+      "src": "icon-512.png",
+      "type": "image/png",
+      "sizes": "512x512",
+      "form_factor": "narrow",
+      "label": "Vista móvil de LavaAuto"
+    },
+    {
+      "src": "icon-512.png",
+      "type": "image/png",
+      "sizes": "512x512",
+      "form_factor": "wide",
+      "label": "Vista escritorio de LavaAuto"
+    }
+  ],
+  "launch_handler": {
+    "client_mode": "focus-existing"
+  },
+  "edge_side_panel": {
+    "preferred_width": 400
+  },
+  "file_handlers": [
+    {
+      "action": "./index.html",
+      "accept": {
+        "text/plain": [".txt"]
+      }
+    }
+  ],
+  "protocol_handlers": [
+    {
+      "protocol": "web+lavaauto",
+      "url": "./index.html?type=%s"
+    }
+  ],
+  "share_target": {
+    "action": "./index.html",
+    "method": "GET",
+    "params": {
+      "title": "title",
+      "text": "text",
+      "url": "url"
+    }
+  },
+  "widgets": [
+    {
+      "name": "LavaAuto Widget",
+      "short_name": "Widget",
+      "description": "Acceso rápido a LavaAuto",
+      "tag": "lavaauto-widget",
+      "template": "lavaauto-template",
+      "ms_ac_template": "widgets/lavaauto.json",
+      "data": "widgets/data.json",
+      "type": "text/html",
+      "screenshots": [
+        {
+          "src": "icon-512.png",
+          "sizes": "512x512",
+          "label": "Widget Screenshot"
+        }
+      ],
+      "icons": [
+        {
+          "src": "icon-192.png",
+          "sizes": "192x192"
+        }
+      ]
+    }
+  ],
+  "note_taking": {
+    "new_note_url": "./index.html#note"
+  },
+  "scope_extensions": [
+    {
+      "origin": "https://github.io"
     }
   ]
 }
