@@ -4,10 +4,10 @@
    ================================================== */
 
 /* ==================================================
-   CONTROL DE VERSIÓN OFICIAL - VERSIÓN 3.2.1
+   CONTROL DE VERSIÓN OFICIAL - VERSIÓN 3.2.9
    ================================================== */
 const STORAGE_KEY = 'admin_carwash_data_v3';
-const SCRIPT_VERSION = 'v3.2.8-oct2026';
+const SCRIPT_VERSION = 'v3.2.9-oct2026';
 
 
 /* ==================================================
