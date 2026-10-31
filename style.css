@@ -5,7 +5,6 @@
 /* ==========================================================================
    [0] VARIABLES Y CONFIGURACIÓN BASE
    ========================================================================== */
-
 :root {
     --primary: #0284c7;
     --primary-dark: #0369a1;
@@ -31,7 +30,6 @@
     --radius-sm: 10px;
 }
 
-
 * {
     box-sizing: border-box;
     margin: 0;
@@ -49,21 +47,17 @@ body {
     /* Mantiene el espacio seguro inferior para que el menú no choque con la barra del sistema */
     padding-bottom: calc(90px + env(safe-area-inset-bottom, 0px));
 }
-
 .container {
     max-width: 600px;
     margin: 0 auto;
     padding: 20px;
-    /* ELIMINAMOS el safe-area-inset-top de aquí para que la app suba hasta la barra del reloj */
     width: 100%;
     flex: 1;
 }
-
 .view {
     display: none;
     animation: fadeIn 0.3s ease-in-out;
 }
-
 .view.active {
     display: block;
 }
@@ -73,12 +67,9 @@ body {
     to { opacity: 1; transform: translateY(0); }
 }
 
-
-
 /* ==========================================================================
    CABECERA SUPERIOR (HEADER)
    ========================================================================== */
-
 header {
     background: linear-gradient(135deg, var(--dark), #1e293b);
     color: var(--white);
@@ -91,26 +82,22 @@ header {
     z-index: 100;
     box-shadow: var(--shadow);
 }
-
 .brand {
     display: flex;
     align-items: center;
     gap: 10px;
 }
-
 .brand-title-group {
     display: flex;
     flex-direction: column;
     justify-content: center;
     line-height: 1;
 }
-
 .brand-main-row {
     display: flex;
     align-items: center;
     gap: 8px;
 }
-
 .brand-main {
     font-size: 1.0rem;
     font-weight: 800;
@@ -118,7 +105,6 @@ header {
     letter-spacing: -0.5px;
     margin: 0;
 }
-
 .brand-sub {
     font-size: 0.65rem;
     font-weight: 500;
@@ -126,7 +112,6 @@ header {
     margin: 2px 0 0 0;
     letter-spacing: 0.3px;
 }
-
 .badge-pro {
     background: linear-gradient(135deg, #fbbf24, #f59e0b);
     color: #78350f;
@@ -139,13 +124,11 @@ header {
     box-shadow: 0 0 10px rgba(251, 191, 36, 0.35);
     flex-shrink: 0;
 }
-
 .header-actions {
     display: flex;
     align-items: center;
     gap: 10px;
 }
-
 .badge-caja-status {
     background: var(--danger);
     color: white;
@@ -176,34 +159,16 @@ header {
     cursor: pointer;
     transition: all 0.2s;
 }
-
 .caja-widget:active {
     transform: scale(0.96);
 }
-
 .caja-widget i {
     color: var(--success);
     font-size: 0.9rem;
 }
-
 .caja-info strong {
     font-size: 0.9rem;
     color: var(--white);
-}
-
-.btn-report-header {
-    background: var(--primary);
-    color: var(--white);
-    border: none;
-    width: 32px;
-    height: 32px;
-    border-radius: 10px;
-    display: flex;
-    align-items: center;
-    justify-content: center;
-    cursor: pointer;
-    box-shadow: 0 2px 8px rgba(2, 132, 199, 0.4);
-    transition: all 0.2s;
 }
 
 /* PERFIL DE USUARIO E IMAGEN */
@@ -212,7 +177,6 @@ header {
     width: 42px; 
     height: 42px;
 }
-
 .profile-img-wrapper {
     width: 100%; 
     height: 100%;
@@ -222,7 +186,6 @@ header {
     border: 1px solid rgba(255,255,255,0.2);
     box-shadow: 0 2px 8px rgba(0,0,0,0.15);
 }
-
 .profile-img {
     width: 100%; 
     height: 100%;
@@ -230,7 +193,6 @@ header {
     display: block;
     background-color: #1e293b;
 }
-
 .profile-overlay {
     position: absolute;
     top: 0; left: 0;
@@ -245,16 +207,13 @@ header {
     opacity: 0;
     transition: opacity 0.25s ease;
 }
-
 .profile-img-wrapper:hover .profile-overlay {
     opacity: 1;
 }
 
-
 /* ==========================================================================
    CONTENEDOR PRINCIPAL DE VISTAS (ESTILOS GLOBALES DE TARJETAS Y COMPONENTES)
    ========================================================================== */
-
 .card {
     background: var(--white);
     border-radius: var(--radius);
@@ -263,7 +222,6 @@ header {
     box-shadow: var(--shadow-sm);
     border: 1px solid var(--gray-200);
 }
-
 .card-title {
     font-size: 1rem;
     font-weight: 700;
@@ -273,16 +231,13 @@ header {
     align-items: center;
     justify-content: space-between;
 }
-
 .card-title i {
     color: var(--primary);
 }
 
-
 /* ==========================================================================
    1. VISTA INICIO
    ========================================================================== */
-
 /* TARJETA 1 Y TARJETA 3: GRIDS DE TARJETAS DE ESTADÍSTICAS */
 .stats-grid {
     display: grid;
@@ -290,7 +245,6 @@ header {
     gap: 12px;
     margin-bottom: 16px;
 }
-
 .stat-card {
     background: var(--white);
     padding: 16px;
@@ -303,35 +257,29 @@ header {
     position: relative;
     overflow: hidden;
 }
-
 .stat-card::after {
     content: '';
     position: absolute;
     top: 0; left: 0;
     width: 4px; height: 100%;
 }
-
 .stat-card.primary::after { background: var(--primary); }
 .stat-card.success::after { background: var(--success); }
-
 .stat-label {
     font-size: 0.75rem;
     color: var(--gray-400);
     font-weight: 600;
     text-transform: uppercase;
 }
-
 .stat-value {
     font-size: 1.4rem;
     font-weight: 800;
     color: var(--gray-900);
 }
-
 .stat-sub {
     font-size: 0.75rem;
     color: var(--gray-700);
 }
-
 .stat-icon-sm {
     font-size: 0.75rem;
 }
@@ -344,7 +292,6 @@ header {
     position: relative;
     overflow: hidden;
 }
-
 .stat-card-pendientes .stat-bg-icon {
     position: absolute;
     right: -10px;
@@ -354,18 +301,15 @@ header {
     color: #ea580c;
     pointer-events: none;
 }
-
 .stat-card-pendientes .stat-label {
     color: #c2410c;
     display: flex;
     align-items: center;
     gap: 4px;
 }
-
 .stat-card-pendientes .stat-value {
     color: #ea580c;
 }
-
 .stat-card-pendientes .stat-sub {
     color: #c2410c;
     font-weight: 700;
@@ -378,7 +322,6 @@ header {
     position: relative;
     overflow: hidden;
 }
-
 .stat-card-total .stat-bg-icon {
     position: absolute;
     right: -10px;
@@ -388,16 +331,13 @@ header {
     color: #16a34a;
     pointer-events: none;
 }
-
 .stat-card-total .stat-label {
     color: #15803d;
 }
-
 .stat-card-total .stat-value {
     color: #16a34a;
     font-size: 1.35rem;
 }
-
 .stat-card-total .stat-sub {
     color: #166534;
 }
@@ -413,7 +353,6 @@ header {
     position: relative;
     overflow: hidden;
 }
-
 .rendimiento-bg-icon {
     position: absolute;
     right: -10px;
@@ -423,14 +362,12 @@ header {
     color: #d97706;
     pointer-events: none;
 }
-
 .rendimiento-header {
     display: flex;
     justify-content: space-between;
     align-items: center;
     margin-bottom: 6px;
 }
-
 .rendimiento-title {
     font-size: 0.82rem;
     font-weight: 800;
@@ -441,11 +378,9 @@ header {
     align-items: center;
     gap: 6px;
 }
-
 .rendimiento-title i {
     color: #d97706;
 }
-
 .rendimiento-badge {
     background: #f59e0b;
     color: #ffffff;
@@ -455,20 +390,17 @@ header {
     border-radius: 12px;
     text-transform: uppercase;
 }
-
 .rendimiento-body {
     display: flex;
     align-items: baseline;
     gap: 8px;
 }
-
 .rendimiento-amount {
     font-size: 2.2rem;
     font-weight: 800;
     color: #78350f;
     line-height: 1;
 }
-
 .rendimiento-subtitle {
     font-size: 0.78rem;
     font-weight: 600;
@@ -488,7 +420,6 @@ header {
     align-items: center;
     box-shadow: 0 2px 6px rgba(239, 68, 68, 0.08);
 }
-
 .discount-banner-bg {
     position: absolute;
     right: -6px;
@@ -498,7 +429,6 @@ header {
     color: #ef4444;
     pointer-events: none;
 }
-
 .discount-banner-content {
     display: flex;
     justify-content: space-between;
@@ -506,7 +436,6 @@ header {
     width: 100%;
     z-index: 1;
 }
-
 .discount-left {
     display: flex;
     align-items: center;
@@ -515,7 +444,6 @@ header {
     padding-right: 12px;
     flex-shrink: 0;
 }
-
 .discount-title {
     font-size: 0.7rem;
     font-weight: 800;
@@ -525,11 +453,9 @@ header {
     align-items: center;
     gap: 4px;
 }
-
 .discount-title i {
     color: #ef4444;
 }
-
 .discount-total {
     font-size: 0.95rem;
     font-weight: 800;
@@ -539,14 +465,12 @@ header {
     border-radius: 6px;
     border: 1px solid #fca5a5;
 }
-
 .discount-right {
     flex: 1;
     padding-left: 12px;
     overflow: hidden;
     text-align: right;
 }
-
 .discount-ticker-text {
     font-size: 0.73rem;
     font-weight: 700;
@@ -555,11 +479,9 @@ header {
     overflow: hidden;
     text-overflow: ellipsis;
 }
-
 .discount-ticker-text.fade-in {
     animation: fadeInText 0.4s ease-in-out;
 }
-
 @keyframes fadeInText {
     from { opacity: 0; transform: translateY(4px); }
     to { opacity: 1; transform: translateY(0); }
@@ -571,25 +493,21 @@ header {
     justify-content: space-between;
     align-items: center;
 }
-
 .formas-pago-subtitle {
     font-size: 0.72rem;
     color: var(--gray-400);
 }
-
 .formas-pago-grid {
     display: grid;
     grid-template-columns: 1fr 1fr;
     gap: 12px;
 }
-
 .payment-box-efectivo {
     background: var(--gray-100);
     padding: 16px;
     border-radius: var(--radius-sm);
     border: 1px solid var(--gray-200);
 }
-
 .payment-box-label-efectivo {
     font-size: 0.75rem;
     color: var(--gray-400);
@@ -597,12 +515,10 @@ header {
     display: block;
     margin-bottom: 4px;
 }
-
 .payment-box-value-efectivo {
     font-size: 1.25rem;
     color: var(--dark);
 }
-
 .payment-box-yappy {
     background: #f3e8ff;
     padding: 16px;
@@ -611,25 +527,21 @@ header {
     cursor: pointer;
     transition: all 0.2s ease;
 }
-
 .payment-box-yappy-header {
     display: flex;
     justify-content: space-between;
     align-items: center;
     margin-bottom: 4px;
 }
-
 .payment-box-label-yappy {
     font-size: 0.75rem;
     color: #6b21a8;
     font-weight: 700;
 }
-
 .payment-box-icon-yappy {
     font-size: 0.8rem;
     color: #7e22ce;
 }
-
 .payment-box-value-yappy {
     font-size: 1.25rem;
     color: #581c87;
@@ -643,11 +555,9 @@ header {
     border: 1px solid var(--gray-200);
     margin-bottom: 20px;
 }
-
 .earnings-box-reset {
     margin-bottom: 0;
 }
-
 .earnings-row {
     display: flex;
     justify-content: space-between;
@@ -655,12 +565,10 @@ header {
     padding: 10px 0;
     border-bottom: 1px solid var(--gray-200);
 }
-
 .earnings-row:last-child {
     border-bottom: none;
     padding-bottom: 0;
 }
-
 .earning-label {
     display: flex;
     align-items: center;
@@ -669,7 +577,6 @@ header {
     font-size: 0.9rem;
     color: var(--gray-700);
 }
-
 .earning-label i {
     width: 28px; 
     height: 28px;
@@ -679,16 +586,13 @@ header {
     justify-content: center;
     font-size: 0.85rem;
 }
-
 .earning-icon-lavadores { background: var(--success-light); color: var(--success); }
 .earning-icon-admin     { background: #fef3c7; color: #d97706; }
 .earning-icon-subadmin  { background: #e0f2fe; color: #0284c7; }
-
 .earning-value {
     font-weight: 800;
     font-size: 1.05rem;
 }
-
 .earning-value-lavadores { color: var(--success); }
 .earning-value-admin     { color: #d97706; }
 .earning-value-subadmin  { color: #0284c7; }
@@ -699,7 +603,6 @@ header {
     flex-direction: column;
     gap: 8px;
 }
-
 .lavador-payout-item {
     display: flex;
     justify-content: space-between;
@@ -710,13 +613,11 @@ header {
     border: 1px solid #e2e8f0;
     margin-bottom: 8px;
 }
-
 .lavador-payout-info {
     display: flex;
     flex-direction: column;
     gap: 4px;
 }
-
 .lavador-name-title {
     font-weight: 700;
     font-size: 1rem;
@@ -725,23 +626,19 @@ header {
     align-items: center;
     gap: 8px;
 }
-
 .lavador-name-title i {
     color: var(--primary);
     font-size: 0.95rem;
 }
-
 .lavador-stats-text {
     font-size: 0.7rem;
     color: #64748b;
     font-weight: normal;
 }
-
 .lavador-stats-text strong {
     color: #64748b;
     font-weight: 600;
 }
-
 .lavador-payout-right {
     text-align: right;
     display: flex;
@@ -749,7 +646,6 @@ header {
     align-items: flex-end;
     gap: 2px;
 }
-
 .lavador-payout-amount {
     font-weight: 800;
     color: #10b981;
@@ -758,12 +654,10 @@ header {
     border-radius: 20px;
     font-size: 0.9rem;
 }
-
 .lavador-bruto-text {
     font-size: 0.75rem;
     color: #94a3b8;
 }
-
 .lavador-empty-msg {
     font-size: 12px;
     color: #94a3b8;
@@ -777,13 +671,11 @@ header {
     gap: 12px;
     margin-bottom: 12px;
 }
-
 .flex-between {
     display: flex;
     justify-content: space-between;
     align-items: center;
 }
-
 .card-bg-icon {
     position: absolute;
     right: -8px;
@@ -792,11 +684,9 @@ header {
     font-size: 3.5rem;
     pointer-events: none;
 }
-
 .star-icon { color: #eab308; }
 .purple-icon { color: #c084fc; }
 .green-icon { color: #34d399; }
-
 .card-label {
     font-size: 0.72rem;
     font-weight: 800;
@@ -806,7 +696,6 @@ header {
     gap: 4px;
     margin-bottom: 6px;
 }
-
 .card-title {
     font-size: 1.05rem;
     font-weight: 800;
@@ -815,7 +704,6 @@ header {
     overflow: hidden;
     text-overflow: ellipsis;
 }
-
 .card-subtitle {
     font-size: 0.75rem;
     font-weight: 600;
@@ -830,7 +718,6 @@ header {
     position: relative;
     overflow: hidden;
 }
-
 .star-label { color: #a16207; }
 .star-label i { color: #eab308; }
 .star-title { color: #713f12; }
@@ -844,33 +731,26 @@ header {
     position: relative;
     overflow: hidden;
 }
-
 .card-slate:not(.card-full) {
     margin-bottom: 0;
 }
-
 .slate-label { color: #475569; }
-
 .stat-group {
     display: flex;
     gap: 10px;
     align-items: baseline;
     margin-top: 4px;
 }
-
 .stat-divider {
     border-left: 1px solid #cbd5e1;
     padding-left: 10px;
 }
-
 .stat-num {
     font-size: 1.1rem;
     font-weight: 800;
 }
-
 .text-blue { color: #0284c7; }
 .text-green { color: #16a34a; }
-
 .stat-sublabel {
     font-size: 0.68rem;
     color: #64748b;
@@ -887,7 +767,6 @@ header {
     position: relative;
     overflow: hidden;
 }
-
 .purple-label { color: #86198f; }
 .purple-label i { color: #c084fc; }
 .purple-title { color: #701a75; }
@@ -902,25 +781,20 @@ header {
     position: relative;
     overflow: hidden;
 }
-
 .green-label { color: #065f46; }
 .green-label i { color: #10b981; }
-
 .green-title {
     font-size: 1.15rem;
     color: #047857;
 }
-
 .ticket-subtitle { color: #059669; }
 
 /* TARJETA 9: ÚLTIMA ACTIVIDAD EN PISTA */
 .card-full {
     margin-bottom: 12px;
 }
-
 .icon-blue { color: #0284c7; }
 .icon-yellow { color: #eab308; }
-
 .badge-slate {
     font-size: 0.7rem;
     font-weight: 700;
@@ -929,16 +803,13 @@ header {
     padding: 2px 8px;
     border-radius: 10px;
 }
-
 .activity-body { margin-top: 8px; }
-
 .activity-title {
     font-size: 0.95rem;
     font-weight: 800;
     color: #1e293b;
     display: block;
 }
-
 .activity-detail {
     font-size: 0.75rem;
     font-weight: 600;
@@ -954,16 +825,12 @@ header {
     position: relative;
     overflow: hidden;
 }
-
 .goal-header { margin-bottom: 8px; }
-
 .goal-label {
     font-size: 0.75rem;
     color: #1e40af;
 }
-
 .icon-goal { color: #2563eb; }
-
 .badge-goal {
     font-size: 0.75rem;
     font-weight: 800;
@@ -972,7 +839,6 @@ header {
     padding: 2px 8px;
     border-radius: 10px;
 }
-
 .progress-bar-container {
     width: 100%;
     background: #bfdbfe;
@@ -981,7 +847,6 @@ header {
     overflow: hidden;
     margin-bottom: 8px;
 }
-
 .progress-bar-fill {
     width: 0%;
     height: 100%;
@@ -989,7 +854,6 @@ header {
     border-radius: 5px;
     transition: width 0.4s ease;
 }
-
 .goal-footer {
     font-size: 0.75rem;
     font-weight: 700;
@@ -1003,7 +867,6 @@ header {
     padding-top: 20px;
     border-top: 1px dashed var(--gray-300);
 }
-
 .btn-reset-discreet {
     background: transparent;
     border: none;
@@ -1017,22 +880,18 @@ header {
     align-items: center;
     gap: 6px;
 }
-
 .btn-reset-discreet:hover {
     color: var(--danger);
     background: var(--danger-light);
 }
 
-
 /* ==========================================================================
    2. VISTA AUTOS
    ========================================================================== */
-
 /* --- Clases Utilitarias Generales --- */
 .is-hidden {
     display: none;
 }
-
 .relative-container {
     position: relative;
 }
@@ -1142,7 +1001,6 @@ header {
     border-radius: var(--radius-sm);
     margin-bottom: 20px;
 }
-
 .tab-btn {
     flex: 1;
     background: transparent;
@@ -1155,7 +1013,6 @@ header {
     cursor: pointer;
     transition: all 0.2s;
 }
-
 .tab-btn.active {
     background: var(--white);
     color: var(--primary);
@@ -1167,14 +1024,12 @@ header {
     position: relative;
     margin-bottom: 16px;
 }
-
 .search-box i {
     position: absolute;
     left: 14px; top: 50%;
     transform: translateY(-50%);
     color: var(--gray-400);
 }
-
 .search-box input {
     padding-left: 40px;
 }
@@ -1186,7 +1041,6 @@ header {
     right: 16px;
     z-index: 10;
 }
-
 .pista-selector-badge {
     background: #e0f2fe;
     border: 1px solid #bae6fd;
@@ -1197,12 +1051,10 @@ header {
     gap: 6px;
     box-shadow: 0 2px 4px rgba(0,0,0,0.05);
 }
-
 .pista-icon {
     color: #0284c7;
     font-size: 0.8rem;
 }
-
 .pista-select {
     background: transparent;
     border: none;
@@ -1212,7 +1064,6 @@ header {
     outline: none;
     cursor: pointer;
 }
-
 .card-title-pista-offset {
     padding-right: 120px;
 }
@@ -1222,7 +1073,6 @@ header {
     margin-bottom: 16px;
     position: relative;
 }
-
 .form-label {
     display: block;
     font-size: 0.85rem;
@@ -1230,7 +1080,6 @@ header {
     color: var(--gray-700);
     margin-bottom: 6px;
 }
-
 .form-control {
     width: 100%;
     padding: 12px 14px;
@@ -1241,13 +1090,11 @@ header {
     color: var(--gray-900);
     transition: all 0.2s;
 }
-
 .form-control:focus {
     outline: none;
     border-color: var(--primary);
     box-shadow: 0 0 0 3px var(--primary-light);
 }
-
 select.form-control {
     appearance: none;
     background-image: url("data:image/svg+xml;charset=UTF-8,%3csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 24 24' fill='none' stroke='%2364748b' stroke-width='2' stroke-linecap='round' stroke-linejoin='round'%3e%3cpolyline points='6 9 12 15 18 9'%3e%3c/polyline%3e%3c/svg%3e");
@@ -1256,23 +1103,19 @@ select.form-control {
     background-size: 16px;
     padding-right: 40px;
 }
-
 .form-row {
     display: grid;
     grid-template-columns: 1fr 1fr;
     gap: 12px;
 }
-
 .input-placa {
     text-transform: uppercase;
     font-weight: 700;
 }
-
 .field-help-text {
     font-size: 0.7rem;
     color: var(--gray-400);
 }
-
 .frecuente-inline-box {
     padding: 10px 14px;
     background: var(--gray-100);
@@ -1283,18 +1126,15 @@ select.form-control {
     align-items: center;
     height: 48px;
 }
-
 .frecuente-label-text {
     font-size: 0.8rem;
     font-weight: 600;
     color: var(--gray-700);
 }
-
 .switch-sm {
     width: 40px;
     height: 22px;
 }
-
 .form-divider {
     border: 0;
     border-top: 1px solid var(--gray-200);
@@ -1315,12 +1155,10 @@ select.form-control {
     pointer-events: none;
     text-transform: uppercase;
 }
-
 .placa-detection-badge.registered {
     background: var(--success-light);
     color: var(--success);
 }
-
 .placa-suggestions-dropdown {
     position: absolute;
     top: 100%; left: 0; right: 0;
@@ -1333,7 +1171,6 @@ select.form-control {
     overflow-y: auto;
     margin-top: 4px;
 }
-
 .placa-suggestion-item {
     padding: 10px 14px;
     font-size: 0.85rem;
@@ -1343,7 +1180,6 @@ select.form-control {
     justify-content: space-between;
     align-items: center;
 }
-
 .placa-suggestion-item:hover { background: var(--primary-light); }
 
 /* --- Selección de Servicios --- */
@@ -1353,7 +1189,6 @@ select.form-control {
     margin-bottom: 8px;
     display: block;
 }
-
 .servicios-contenedor {
     display: grid;
     grid-template-columns: 1fr 1fr;
@@ -1363,7 +1198,31 @@ select.form-control {
     border-radius: 10px;
     border: 1px solid #e2e8f0;
 }
-
+.servicios-opcion-motor {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    width: 100%;
+    padding: 10px 14px;
+    background: #ffffff;
+    border-radius: 10px;
+    border: 1px solid #cbd5e1;
+    margin: 12px 0 12px 0;
+    cursor: pointer;
+    font-size: 0.9rem;
+    font-weight: 600;
+    color: #334155;
+}
+.servicios-opcion-motor-inner {
+    display: flex;
+    align-items: center;
+    gap: 8px;
+}
+.servicios-opcion-motor input[type="checkbox"] {
+    width: 14px;
+    height: 14px;
+    accent-color: var(--primary);
+}
 .servicios-opcion {
     display: flex;
     align-items: center;
@@ -1377,14 +1236,12 @@ select.form-control {
     border-radius: 6px;
     border: 1px solid #cbd5e1;
 }
-
 .servicios-opcion input[type="checkbox"],
 .servicios-opcion input[type="radio"] {
     width: 14px;
     height: 14px;
     accent-color: var(--primary);
 }
-
 .servicios-opcion:has(input:checked) {
     background: #e0f2fe;
     border-color: #bae6fd;
@@ -1402,11 +1259,9 @@ select.form-control {
     grid-template-columns: 1fr 1fr;
     gap: 10px;
 }
-
 .calc-preview-2col {
     grid-template-columns: 1fr 1fr;
 }
-
 .calc-item span {
     display: block;
     font-size: 0.7rem;
@@ -1414,12 +1269,10 @@ select.form-control {
     font-weight: 600;
     text-transform: uppercase;
 }
-
 .calc-item strong {
     font-size: 1rem;
     color: var(--primary-dark);
 }
-
 .vehiculo-historial-box {
     background: var(--primary-light);
     border: 1px solid #bae6fd;
@@ -1427,7 +1280,6 @@ select.form-control {
     padding: 14px;
     margin-bottom: 16px;
 }
-
 .historial-header-title {
     font-size: 0.85rem;
     font-weight: 700;
@@ -1437,7 +1289,6 @@ select.form-control {
     align-items: center;
     gap: 6px;
 }
-
 .historial-content-grid {
     font-size: 0.8rem;
     color: var(--gray-700);
@@ -1456,23 +1307,19 @@ select.form-control {
     position: relative;
     overflow: hidden;
 }
-
 .record-card.pending {
     border-left: 5px solid var(--warning);
     background: linear-gradient(to right, #fffdfa, var(--white));
 }
-
 .record-card.paid {
     border-left: 5px solid var(--success);
 }
-
 .record-top {
     display: flex;
     justify-content: space-between;
     align-items: flex-start;
     margin-bottom: 8px;
 }
-
 .record-plate {
     font-size: 0.8rem;
     color: var(--gray-700);
@@ -1481,7 +1328,6 @@ select.form-control {
     border-radius: 6px;
     font-weight: 600;
 }
-
 .record-client {
     font-size: 0.80rem;
     font-weight: 800;
@@ -1494,7 +1340,6 @@ select.form-control {
     box-shadow: var(--shadow-sm);
     margin-top: 0px;
 }
-
 .record-details {
     display: flex;
     flex-wrap: wrap;
@@ -1505,30 +1350,25 @@ select.form-control {
     padding-bottom: 12px;
     border-bottom: 1px solid var(--gray-200);
 }
-
 .record-details span {
     display: flex;
     align-items: center;
     gap: 5px;
 }
-
 .record-footer {
     display: flex;
     justify-content: space-between;
     align-items: center;
 }
-
 .record-amount {
     font-size: 1.15rem;
     font-weight: 800;
     color: var(--gray-900);
 }
-
 .record-actions {
     display: flex;
     gap: 6px;
 }
-
 
 /* --- Etiquetas compactas para servicios y descuentos --- */
 .badge-motor {
@@ -1541,7 +1381,6 @@ select.form-control {
     font-weight: 800;
     white-space: nowrap;
 }
-
 .badge-descuento {
     background: var(--danger-light);
     color: #b91c1c;
@@ -1552,7 +1391,6 @@ select.form-control {
     font-weight: 800;
     white-space: nowrap;
 }
-
 .cliente-descuento-line {
     color: var(--danger) !important;
     font-weight: 800;
@@ -1568,7 +1406,6 @@ select.form-control {
     align-items: center;
     gap: 4px;
 }
-
 .badge-pending { background: var(--warning-light); color: #b45309; }
 .badge-paid { background: var(--success-light); color: #047857; }
 .badge-yappy { background: #e0e7ff; color: #4338ca; }
@@ -1616,7 +1453,6 @@ select.form-control {
     margin-bottom: 16px;
     border: 1px solid #e2e8f0;
 }
-
 .seg-btn {
     flex: 1;
     background: transparent;
@@ -1633,17 +1469,14 @@ select.form-control {
     justify-content: center;
     gap: 6px;
 }
-
 .seg-btn.active {
     background: #ffffff;
     color: var(--primary, #0284c7);
     box-shadow: 0 2px 4px rgba(0,0,0,0.06);
 }
-
 .seg-btn-express {
     flex: 0 0 42px;
 }
-
 .seg-btn-express.active {
     color: #eab308;
 }
@@ -1662,11 +1495,9 @@ select.form-control {
     align-items: center;
     gap: 8px;
 }
-
 .express-icon {
     color: #eab308;
 }
-
 .btn-submit-form {
     margin-top: 12px;
 }
@@ -1675,13 +1506,11 @@ select.form-control {
 /* ==========================================================================
    3. VISTA CLIENTES
    ========================================================================== */
-
 .item-list {
     display: flex;
     flex-direction: column;
     gap: 10px;
 }
-
 .list-card {
     background: var(--white);
     border-radius: var(--radius-sm);
@@ -1691,32 +1520,26 @@ select.form-control {
     justify-content: space-between;
     align-items: center;
 }
-
 .list-card-info h4 {
     font-size: 0.95rem;
     font-weight: 700;
     color: var(--gray-900);
     margin-bottom: 2px;
 }
-
 .list-card-info p {
     font-size: 0.8rem;
     color: var(--gray-400);
 }
-
 .empty-state {
     text-align: center;
     padding: 40px 20px;
     color: var(--gray-400);
 }
-
 .empty-state i {
     font-size: 3rem;
     margin-bottom: 12px;
     color: var(--gray-300);
 }
-
-
 #view-clientes .card > .card-title {
     display: flex;
     flex-direction: row;
@@ -1725,12 +1548,10 @@ select.form-control {
     width: 100%;
     gap: 12px;
 }
-
 #view-clientes .card > .card-title > span {
     flex: 1;
     min-width: 0;
 }
-
 #view-clientes .card > .card-title > button {
     flex: 0 0 auto;
     margin-left: auto;
@@ -1742,13 +1563,11 @@ select.form-control {
 
 /* Se utilizan componentes globales .form-control, .btn, e .item-list */
 
-
 /* ==========================================================================
    5. VISTA INVENTARIO
    ========================================================================== */
 
 /* Se utilizan componentes globales .form-control, .btn, e .item-list */
-
 
 /* ==========================================================================
    6. VISTA CAJA
@@ -1846,7 +1665,6 @@ select.form-control {
     gap: 3px;
     margin-bottom: 12px;
 }
-
 .ios-tab-btn {
     flex: 1;
     border: none;
@@ -1863,13 +1681,11 @@ select.form-control {
     gap: 6px;
     transition: all 0.2s cubic-bezier(0.4, 0, 0.2, 1);
 }
-
 .ios-tab-btn.active.danger {
     background: #ffffff;
     color: #ef4444;
     box-shadow: 0 2px 6px rgba(239, 68, 68, 0.15);
 }
-
 .ios-tab-btn.active.success {
     background: #ffffff;
     color: #10b981;
@@ -1891,13 +1707,11 @@ select.form-control {
     gap: 8px;
     margin-bottom: 8px;
 }
-
 .gasto-tipo-select,
 .gasto-lavador-select {
     flex: 1;
     min-width: 0;
 }
-
 .movimiento-tipo {
     display: inline-flex;
     align-items: center;
@@ -1908,17 +1722,14 @@ select.form-control {
     font-size: 0.66rem;
     font-weight: 800;
 }
-
 .movimiento-tipo.admin {
     background: var(--danger-light);
     color: var(--danger);
 }
-
 .movimiento-tipo.lavador {
     background: var(--success-light);
     color: #047857;
 }
-
 .movimiento-tipo.general {
     background: var(--gray-200);
     color: var(--gray-700);
@@ -1929,7 +1740,6 @@ select.form-control {
     display: flex;
     gap: 6px;
 }
-
 .btn-icon {
     width: 34px;
     height: 34px;
@@ -1943,23 +1753,19 @@ select.form-control {
     cursor: pointer;
     transition: all 0.2s;
 }
-
 .btn-icon:active {
     transform: scale(0.94);
 }
-
 .btn-icon.success {
     border-color: var(--success);
     color: var(--success);
     background: var(--success-light);
 }
-
 .btn-icon.danger {
     border-color: var(--danger);
     color: var(--danger);
     background: var(--danger-light);
 }
-
 .btn-icon.primary {
     border-color: var(--primary);
     color: var(--primary);
@@ -1971,7 +1777,6 @@ select.form-control,
 select.ios-input {
     color-scheme: light;
 }
-
 select.form-control option,
 select.ios-input option {
     background: #ffffff;
@@ -1993,12 +1798,10 @@ select.ios-input option {
     pointer-events: none;
     transition: opacity 0.2s ease;
 }
-
 .app-alert-overlay.open {
     opacity: 1;
     pointer-events: auto;
 }
-
 .app-alert-card {
     width: 100%;
     max-width: 330px;
@@ -2010,11 +1813,9 @@ select.ios-input option {
     transform: translateY(10px) scale(0.98);
     transition: transform 0.2s ease;
 }
-
 .app-alert-overlay.open .app-alert-card {
     transform: translateY(0) scale(1);
 }
-
 .app-alert-icon {
     width: 46px;
     height: 46px;
@@ -2027,14 +1828,12 @@ select.ios-input option {
     color: var(--danger);
     font-size: 1.25rem;
 }
-
 .app-alert-title {
     font-size: 1rem;
     font-weight: 800;
     color: var(--gray-900);
     margin-bottom: 6px;
 }
-
 .app-alert-message {
     font-size: 0.84rem;
     line-height: 1.45;
@@ -2042,7 +1841,6 @@ select.ios-input option {
     white-space: pre-line;
     margin-bottom: 16px;
 }
-
 .app-alert-button {
     width: 100%;
     border: none;
@@ -2054,12 +1852,10 @@ select.ios-input option {
     font-weight: 800;
     cursor: pointer;
 }
-
 .app-alert-button:active {
     background: var(--primary-dark);
     transform: scale(0.98);
 }
-
 .ios-input {
     background: #f8fafc;
     border: 1px solid #e2e8f0;
@@ -2070,7 +1866,6 @@ select.ios-input option {
     outline: none;
     transition: border-color 0.2s ease;
 }
-
 .ios-input:focus {
     border-color: #94a3b8;
     background: #ffffff;
@@ -2109,11 +1904,9 @@ select.ios-input option {
     box-shadow: 0 2px 6px rgba(2, 132, 199, 0.25);
     transition: transform 0.1s ease, background-color 0.2s ease;
 }
-
 .ios-btn-add:hover {
     background-color: var(--primary-dark) !important;
 }
-
 .ios-btn-add:active {
     transform: scale(0.92);
 }
@@ -2144,7 +1937,6 @@ select.ios-input option {
     margin-left: 8px !important;
     transition: all 0.2s ease !important;
 }
-
 .btn-delete-neutral:hover,
 .history-list-box .btn-delete:hover,
 .history-list-box button[onclick*="delete"]:hover {
@@ -2158,13 +1950,11 @@ select.ios-input option {
     color: var(--gray-400);
     margin-bottom: 12px;
 }
-
 .compact-pay-list {
     display: flex;
     flex-direction: column;
     gap: 8px;
 }
-
 .lavador-pay-card {
     background: var(--white);
     border: 1px solid var(--gray-200);
@@ -2175,28 +1965,23 @@ select.ios-input option {
     align-items: center;
     margin-bottom: 8px;
 }
-
 .lavador-pay-card.paid {
     background: var(--gray-100);
 }
-
 .lavador-pay-info {
     display: flex;
     flex-direction: column;
     gap: 2px;
 }
-
 .lavador-pay-name {
     font-weight: 800;
     font-size: 0.95rem;
     color: var(--gray-900);
 }
-
 .lavador-pay-sub {
     font-size: 0.75rem;
     color: var(--gray-400);
 }
-
 .btn-pay-oneclick {
     background: var(--success);
     color: var(--white);
@@ -2211,11 +1996,9 @@ select.ios-input option {
     gap: 6px;
     transition: transform 0.15s ease;
 }
-
 .btn-pay-oneclick:active {
     transform: scale(0.95);
 }
-
 .badge-pay-status {
     background: var(--success-light);
     color: var(--success);
@@ -2232,13 +2015,11 @@ select.ios-input option {
 .card-cierre-danger {
     border: 1.5px solid var(--danger-light);
 }
-
 .btn-danger-action {
     background-color: var(--danger);
     color: var(--white);
     border: none;
 }
-
 .btn-full {
     width: 100%;
     padding: 12px;
@@ -2251,7 +2032,6 @@ select.ios-input option {
     justify-content: center;
     gap: 8px;
 }
-
 .banner-reporte {
     background: var(--white);
     border-radius: var(--radius);
@@ -2262,14 +2042,12 @@ select.ios-input option {
     box-shadow: var(--shadow-sm);
     text-align: center;
 }
-
 .banner-reporte-title {
     font-size: 1.1rem;
     font-weight: 800;
     color: var(--gray-900);
     margin-bottom: 6px;
 }
-
 .banner-reporte-desc {
     font-size: 0.85rem;
     color: var(--gray-400);
@@ -2281,7 +2059,6 @@ select.ios-input option {
 /* ==========================================================================
    7. VISTA REPORTE
    ========================================================================== */
-
 .report-box {
     background: var(--white);
     border-radius: var(--radius);
@@ -2297,11 +2074,9 @@ select.ios-input option {
     overflow-y: auto;
 }
 
-
 /* ==========================================================================
    NAVEGACIÓN INFERIOR (BOTTOM NAV) CON NOTIFICACIONES DINÁMICAS
    ========================================================================== */
-
 .bottom-nav {
     position: fixed;
     bottom: 0;
@@ -2318,7 +2093,6 @@ select.ios-input option {
     max-width: 600px;
     margin: 0 auto;
 }
-
 .nav-item {
     background: none;
     border: none;
@@ -2335,27 +2109,22 @@ select.ios-input option {
     padding: 6px 0;
     border-radius: var(--radius-sm);
 }
-
 .nav-item i {
     font-size: 1.15rem;
     transition: transform 0.2s;
 }
-
 .nav-item.active {
     color: var(--primary);
     background: var(--primary-light);
 }
-
 .nav-item.active i {
     transform: scale(1.1);
 }
-
 .nav-item-hex {
     position: relative;
     overflow: visible;
     background: none !important;
 }
-
 .nav-item-hex .hex-badge {
     width: 44px;
     height: 44px;
@@ -2370,38 +2139,31 @@ select.ios-input option {
     transition: all 0.2s ease;
     margin-top: -22px;
 }
-
 .nav-item-hex.active .hex-badge {
     background: var(--primary-light);
     border-color: #bae6fd;
     transform: translateY(-2px);
     box-shadow: 0 6px 16px rgba(2, 132, 199, 0.2);
 }
-
 .nav-item-hex span {
     margin-top: -4px;
     color: var(--gray-400);
 }
-
 .nav-item-hex.active span {
     color: var(--primary);
     font-weight: 700;
 }
-
 .nav-item-hex i {
     font-size: 1.25rem;
     color: var(--gray-400);
 }
-
 .nav-item-hex.active i {
     color: var(--primary);
 }
 
-
 /* ==========================================================================
    VENTANAS MODALES
    ========================================================================== */
-
 .modal-overlay {
     position: fixed;
     top: 0; left: 0; right: 0; bottom: 0;
@@ -2452,28 +2214,23 @@ select.ios-input option {
     transition: all 0.2s;
     width: 100%;
 }
-
 .btn-primary {
     background: var(--primary);
     color: var(--white);
 }
-
 .btn-primary:active {
     background: var(--primary-dark);
     transform: scale(0.98);
 }
-
 .btn-success {
     background: var(--success);
     color: var(--white);
 }
-
 .btn-outline {
     background: transparent;
     border: 1px solid var(--gray-300);
     color: var(--gray-700);
 }
-
 .modal-title {
     font-size: 1.1rem;
     font-weight: 800;
@@ -2483,7 +2240,6 @@ select.ios-input option {
     align-items: center;
     gap: 8px;
 }
-
 .modal-actions {
     display: flex;
     gap: 10px;
@@ -2496,7 +2252,6 @@ select.ios-input option {
 body.custom-select-open {
     overflow: hidden;
 }
-
 .custom-select-overlay {
     position: fixed;
     inset: 0;
@@ -2511,12 +2266,10 @@ body.custom-select-open {
     pointer-events: none;
     transition: opacity 0.18s ease;
 }
-
 .custom-select-overlay.open {
     opacity: 1;
     pointer-events: auto;
 }
-
 .custom-select-card {
     width: min(100%, 390px);
     max-height: min(78vh, 620px);
@@ -2528,11 +2281,9 @@ body.custom-select-open {
     transform: translateY(10px) scale(0.97);
     transition: transform 0.18s ease;
 }
-
 .custom-select-overlay.open .custom-select-card {
     transform: translateY(0) scale(1);
 }
-
 .custom-select-header {
     display: flex;
     align-items: center;
@@ -2540,13 +2291,11 @@ body.custom-select-open {
     padding: 17px 18px 13px;
     border-bottom: 1px solid var(--gray-200);
 }
-
 .custom-select-title {
     font-size: 1rem;
     font-weight: 800;
     color: var(--gray-900);
 }
-
 .custom-select-close {
     width: 34px;
     height: 34px;
@@ -2557,13 +2306,11 @@ body.custom-select-open {
     font-size: 1.35rem;
     line-height: 1;
 }
-
 .custom-select-options {
     padding: 8px 10px;
     max-height: min(58vh, 470px);
     overflow-y: auto;
 }
-
 .custom-select-option {
     width: 100%;
     min-height: 54px;
@@ -2581,14 +2328,12 @@ body.custom-select-open {
     font-weight: 650;
     text-align: left;
 }
-
 .custom-select-option:active,
 .custom-select-option.selected {
     background: var(--primary-light);
     border-color: #bae6fd;
     color: var(--primary-dark);
 }
-
 .custom-select-check {
     width: 25px;
     min-width: 25px;
@@ -2601,11 +2346,9 @@ body.custom-select-open {
     background: var(--primary);
     font-size: 0.72rem;
 }
-
 .custom-select-option:not(.selected) .custom-select-check {
     opacity: 0;
 }
-
 .custom-select-cancel {
     width: calc(100% - 20px);
     margin: 4px 10px 10px;
@@ -2623,7 +2366,6 @@ body.custom-select-open {
     border-color: var(--danger) !important;
     box-shadow: 0 0 0 3px var(--danger-light) !important;
 }
-
 .field-error-message {
     display: flex;
     align-items: center;
@@ -2637,16 +2379,13 @@ body.custom-select-open {
     font-weight: 750;
     animation: fieldErrorIn 0.2s ease-out;
 }
-
 .field-error-message i {
     font-size: 0.68rem;
 }
-
 @keyframes fieldErrorIn {
     from { opacity: 0; transform: translateY(-3px); }
     to { opacity: 1; transform: translateY(0); }
 }
-
 
 /* ===================================================================
    ESTILOS EXTRAÍDOS DEL HTML (REFACTORIZACIÓN Y LIMPIEZA)
@@ -2743,7 +2482,6 @@ body.custom-select-open {
 /* ==========================================================================
    DISEÑO MODERNO: MODAL CONCILIACIÓN YAPPY (MORADO YAPPY / BOTÓN AZUL)
    ========================================================================== */
-
 /* Encabezado del Modal */
 #modalYappy .modal-title {
     display: flex;
@@ -2751,7 +2489,6 @@ body.custom-select-open {
     align-items: center;
     padding-bottom: 6px;
 }
-
 #modalYappy .modal-title span {
     color: #0f172a !important; /* Título oscuro elegante */
     font-weight: 800;
@@ -2760,8 +2497,6 @@ body.custom-select-open {
     align-items: center;
     gap: 6px;
 }
-
-
 #modalYappy .modal-title i {
     color: #7e22ce; /* Icono Morado Yappy */
 }
@@ -2778,7 +2513,6 @@ body.custom-select-open {
     margin-bottom: 12px;
     text-align: center;
 }
-
 .yappy-summary-box span {
     font-size: 0.68rem !important;
     font-weight: 800;
@@ -2787,14 +2521,12 @@ body.custom-select-open {
     letter-spacing: 0.3px;
     display: block;
 }
-
 .color-purple-dark,
 .yappy-monto-purple {
     color: #16a34a !important; /* Morado Yappy */
     font-size: 1.5rem !important;
     font-weight: 800;
 }
-
 .color-green {
     color: gray !important; /* Verde Verificados */
     font-size: 1.5rem !important;
@@ -2822,13 +2554,11 @@ body.custom-select-open {
     align-items: flex-start;
     gap: 4px;
 }
-
 .yappy-header-row {
     display: flex;
     align-items: center;
     gap: 8px;
 }
-
 .yappy-item-placa {
     font-size: 0.9rem;
     font-weight: 800;
@@ -2846,13 +2576,10 @@ body.custom-select-open {
     align-items: center;
     gap: 3px;
 }
-
-
 .yappy-sub-row {
     display: flex;
     align-items: center;
 }
-
 .yappy-item-desglose {
     font-size: 0.54rem;
     color: #64748b;
@@ -2867,7 +2594,6 @@ body.custom-select-open {
     gap: 10px;
     margin-left: auto;
 }
-
 .yappy-item-monto {
     font-size: 1.1rem;
     font-weight: 800;
@@ -2884,13 +2610,11 @@ body.custom-select-open {
     cursor: pointer;
     flex-shrink: 0;
 }
-
 .yappy-checkbox-wrapper input {
     opacity: 0;
     width: 0;
     height: 0;
 }
-
 .checkmark {
     position: absolute;
     top: 0;
@@ -2902,26 +2626,21 @@ body.custom-select-open {
     border-radius: 6px;
     transition: all 0.2s ease;
 }
-
 .yappy-checkbox-wrapper:hover input ~ .checkmark {
     border-color: #7e22ce;
 }
-
 .yappy-checkbox-wrapper input:checked ~ .checkmark {
     background-color: #7e22ce; /* Relleno Morado Yappy */
     border-color: #7e22ce;
 }
-
 .checkmark:after {
     content: "";
     position: absolute;
     display: none;
 }
-
 .yappy-checkbox-wrapper input:checked ~ .checkmark:after {
     display: block;
 }
-
 .yappy-checkbox-wrapper .checkmark:after {
     left: 6px;
     top: 2px;
@@ -2971,24 +2690,20 @@ body.custom-select-open {
     color: #334155;
     font-weight: 700;
 }
-
 .seccion-pago-mixto-hidden {
     display: none;
     margin-top: 12px;
     border-top: 1px solid #e2e8f0;
     padding-top: 10px;
 }
-
 .mixto-inputs-grid {
     display: flex;
     gap: 8px;
     margin-bottom: 10px;
 }
-
 .mixto-input-group {
     flex: 1;
 }
-
 .mixto-label {
     font-size: 0.75rem;
     font-weight: 700;
@@ -2996,7 +2711,6 @@ body.custom-select-open {
     display: block;
     margin-bottom: 4px;
 }
-
 .btn-confirmar-mixto {
     width: 100%;
     background: #0284c7;
@@ -3007,7 +2721,6 @@ body.custom-select-open {
     border-radius: 8px;
     cursor: pointer;
 }
-
 
 /* Aviso de descuento en el modal de pago */
 .modal-info-descuento {
@@ -3025,15 +2738,12 @@ body.custom-select-open {
     line-height: 1.3;
 }
 
-
-
 /* AJUSTE RESPONSIVE DEL MODAL DE YAPPY */
 #modalYappy {
     padding: 12px;
     box-sizing: border-box;
     overflow: hidden;
 }
-
 #modalYappy .modal-md-custom {
     display: flex;
     flex-direction: column;
@@ -3044,7 +2754,6 @@ body.custom-select-open {
     overflow: hidden;
     box-sizing: border-box;
 }
-
 #modalYappy #yappyListContainer {
     flex: 1 1 auto;
     min-height: 0;
@@ -3054,11 +2763,9 @@ body.custom-select-open {
     -webkit-overflow-scrolling: touch;
     overscroll-behavior-y: contain;
 }
-
 #modalYappy .modal-actions {
     flex-shrink: 0;
 }
-
 
 /* OCULTAR BARRAS DE SCROLL DENTRO DE LOS PAGOS YAPPY */
 #modalYappy .modal-scroll-list,
@@ -3083,16 +2790,13 @@ body.custom-select-open {
     -webkit-backdrop-filter: blur(5px);
     transition: opacity 0.30s cubic-bezier(0.22, 1, 0.36, 1);
 }
-
 #modalYappy.open {
     opacity: 1;
 }
-
 #modalYappy.yappy-closing {
     opacity: 0;
     pointer-events: none;
 }
-
 #modalYappy .modal.modal-md-custom {
     opacity: 0;
     transform: translateY(14px) scale(0.965);
@@ -3102,18 +2806,15 @@ body.custom-select-open {
         opacity 0.24s ease;
     will-change: transform, opacity;
 }
-
 #modalYappy.open .modal.modal-md-custom {
     opacity: 1;
     transform: translateY(0) scale(1);
 }
-
 #modalYappy.yappy-closing .modal.modal-md-custom {
     opacity: 0;
     transform: translateY(6px) scale(0.985);
     transition-duration: 0.20s;
 }
-
 @media (prefers-reduced-motion: reduce) {
     #modalYappy,
     #modalYappy .modal.modal-md-custom {
@@ -3163,11 +2864,9 @@ body.custom-select-open {
     transition: transform .2s ease-out;
     will-change: transform;
 }
-
 .discount-detail-overlay.open .discount-detail-modal {
     transform: translateY(0);
 }
-
 .discount-detail-overlay.discount-detail-closing .discount-detail-modal {
     transform: translateY(4px);
 }
@@ -3232,11 +2931,9 @@ body.custom-select-open {
     color: #0284c7;
     background: #e0f2fe;
 }
-
 .discount-detail-loans .discount-detail-category {
     color: #0284c7;
 }
-
 .discount-detail-loans .discount-detail-amount {
     color: #0284c7;
 }
