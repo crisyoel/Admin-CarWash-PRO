@@ -436,21 +436,16 @@
                         <input type="hidden" id="recordClienteId">
                         <input type="hidden" id="recordDescuento" value="0">
 
-          <!-- CLIENTE CON DESCUENTO ULTRA COMPACTO CON ÍCONO ROJO -->
-         <div class="cliente-registro-box" style="margin-bottom: 12px; padding: 10px 12px;">
-       <div class="relative-container" style="position: relative;">
-          <!-- Ícono en color rojo brillante y estético -->
-           <i class="fa-solid fa-user-tag" style="position: absolute; left: 14px; top: 50%; transform: translateY(-50%); color: #ef4444; font-size: 0.9rem; pointer-events: none;"></i>
-        
-        <!-- Input con padding izquierdo para el ícono -->
-        <input type="text" class="form-control" id="recordClienteSearch" placeholder="Cliente con descuento (opcional)" autocomplete="off" oninput="renderRegistroClientesSuggestions(this.value)" style="padding-left: 38px;">
-        
-        <div id="registroClienteSuggestions" class="placa-suggestions-dropdown is-hidden"></div>
-    </div>
-    
-        <div id="registroClienteSeleccionado" class="cliente-seleccionado-box is-hidden"></div>
-            <div id="registroClienteVehiculos" class="cliente-vehiculos-chips is-hidden"></div>
-                </div>
+                        <!-- CLIENTE CON DESCUENTO FIJO (OPCIONAL) -->
+                        <div class="cliente-registro-box">
+                            <div class="cliente-registro-title"><i class="fa-solid fa-user-tag"></i> Cliente con descuento <span>(opcional)</span></div>
+                            <div class="relative-container">
+                                <input type="text" class="form-control" id="recordClienteSearch" placeholder="Buscar cliente por nombre o placa..." autocomplete="off" oninput="renderRegistroClientesSuggestions(this.value)">
+                                <div id="registroClienteSuggestions" class="placa-suggestions-dropdown is-hidden"></div>
+                            </div>
+                            <div id="registroClienteSeleccionado" class="cliente-seleccionado-box is-hidden"></div>
+                            <div id="registroClienteVehiculos" class="cliente-vehiculos-chips is-hidden"></div>
+                        </div>
 
                         <!-- SUB-PESTAÑA 1: VEHÍCULO -->
                         <div id="subTabVehiculo" class="form-subtab-content">
@@ -470,7 +465,7 @@
                                         <option value="CAMIONETA_MEDIANA">Camioneta Mediana</option>
                                         <option value="CAMIONETA_GRANDE">Camioneta Grande</option>
                                         <option value="PICKUP">Pickup</option>
-                                        <option value="FORD_RANGER">Ford Ranger</option>
+                                        <option value="FORD_RANGER">Ford Ranger (Exclusivo)</option>
                                     </select>
                                 </div>
                                 <div class="form-group">
@@ -514,7 +509,6 @@
                                 <i class="fa-solid fa-soap icon-primary"></i> Tipo de Lavado
                             </label>
 
-                            <!-- Cuadrícula de 2x2 para los 4 servicios principales -->
                             <div class="servicios-contenedor">
                                 <label class="servicios-opcion">
                                     <input type="radio" name="serviciosMulti" value="Completo" checked onchange="onServiciosCheckboxChange()">
@@ -535,16 +529,12 @@
                                     <input type="radio" name="serviciosMulti" value="Interior" onchange="onServiciosCheckboxChange()">
                                     Interior
                                 </label>
-                            </div>
 
-                            <!-- Lavado de Motor fuera del grid, ocupando todo el ancho rectangular abajo -->
-                            <label class="servicios-opcion-motor">
-                                <div class="servicios-opcion-motor-inner">
+                                <label class="servicios-opcion">
                                     <input type="checkbox" id="servicioMotor" onchange="onServiciosCheckboxChange()">
-                                    <span>Lavado de Motor</span>
-                                </div>
-                                <span class="text-bold">$10</span>
-                            </label>
+                                    Lavado de Motor <span class="text-bold">+$10</span>
+                                </label>
+                            </div>
 
                             <div class="form-row">
                                 <div class="form-group">
@@ -999,7 +989,7 @@
     </div>
 
     <!-- MODAL: PAGO Y PROPINA -->
-<div class="modal-overlay" id="paymentModal">
+    <div class="modal-overlay" id="paymentModal">
     <div class="modal modal-sm-custom">
         <div class="modal-title justify-center">
             <i class="fa-solid fa-wallet icon-primary"></i> Registrar Pago
@@ -1061,7 +1051,6 @@
     </div>
 </div>
 
-
     <!-- MODAL: CONCILIACIÓN DE YAPPY -->
     <div class="modal-overlay is-hidden" id="modalYappy">
         <div class="modal modal-md-custom">
@@ -1120,8 +1109,8 @@
         </div>
     </div>
 
-        <!-- Script Principal de la Aplicación -->
-    <script src="script.js?v=v3.2.6-oct2026"></script>
+    <!-- Script Principal de la Aplicación -->
+    <script src="script.js?v=v3.2.1-oct2026"></script>
 
     <!-- Service Worker PWA -->
     <script>
