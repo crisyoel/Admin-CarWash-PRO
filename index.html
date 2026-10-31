@@ -436,16 +436,21 @@
                         <input type="hidden" id="recordClienteId">
                         <input type="hidden" id="recordDescuento" value="0">
 
-                        <!-- CLIENTE CON DESCUENTO FIJO (OPCIONAL) -->
-                        <div class="cliente-registro-box">
-                            <div class="cliente-registro-title"><i class="fa-solid fa-user-tag"></i> Cliente con descuento <span>(opcional)</span></div>
-                            <div class="relative-container">
-                                <input type="text" class="form-control" id="recordClienteSearch" placeholder="Buscar cliente por nombre o placa..." autocomplete="off" oninput="renderRegistroClientesSuggestions(this.value)">
-                                <div id="registroClienteSuggestions" class="placa-suggestions-dropdown is-hidden"></div>
-                            </div>
-                            <div id="registroClienteSeleccionado" class="cliente-seleccionado-box is-hidden"></div>
-                            <div id="registroClienteVehiculos" class="cliente-vehiculos-chips is-hidden"></div>
-                        </div>
+                        <!-- CLIENTE CON DESCUENTO ULTRA COMPACTO CON ÍCONO ROJO -->
+<div class="cliente-registro-box" style="margin-bottom: 12px; padding: 10px 12px;">
+    <div class="relative-container" style="position: relative;">
+        <!-- Ícono en color rojo brillante y estético -->
+        <i class="fa-solid fa-user-tag" style="position: absolute; left: 14px; top: 50%; transform: translateY(-50%); color: #ef4444; font-size: 0.9rem; pointer-events: none;"></i>
+        
+        <!-- Input con padding izquierdo para el ícono -->
+        <input type="text" class="form-control" id="recordClienteSearch" placeholder="Cliente con descuento" autocomplete="off" oninput="renderRegistroClientesSuggestions(this.value)" style="padding-left: 38px;">
+        
+        <div id="registroClienteSuggestions" class="placa-suggestions-dropdown is-hidden"></div>
+    </div>
+    
+    <div id="registroClienteSeleccionado" class="cliente-seleccionado-box is-hidden"></div>
+    <div id="registroClienteVehiculos" class="cliente-vehiculos-chips is-hidden"></div>
+</div>
 
                         <!-- SUB-PESTAÑA 1: VEHÍCULO -->
                         <div id="subTabVehiculo" class="form-subtab-content">
@@ -509,6 +514,7 @@
                                 <i class="fa-solid fa-soap icon-primary"></i> Tipo de Lavado
                             </label>
 
+                            <!-- Cuadrícula de 2x2 para los 4 servicios principales -->
                             <div class="servicios-contenedor">
                                 <label class="servicios-opcion">
                                     <input type="radio" name="serviciosMulti" value="Completo" checked onchange="onServiciosCheckboxChange()">
@@ -529,12 +535,16 @@
                                     <input type="radio" name="serviciosMulti" value="Interior" onchange="onServiciosCheckboxChange()">
                                     Interior
                                 </label>
-
-                                <label class="servicios-opcion">
-                                    <input type="checkbox" id="servicioMotor" onchange="onServiciosCheckboxChange()">
-                                    Lavado de Motor <span class="text-bold">+$10</span>
-                                </label>
                             </div>
+
+                            <!-- Lavado de Motor fuera del grid, ocupando todo el ancho rectangular abajo -->
+                            <label class="servicios-opcion-motor">
+                                <div class="servicios-opcion-motor-inner">
+                                    <input type="checkbox" id="servicioMotor" onchange="onServiciosCheckboxChange()">
+                                    <span>Lavado de Motor</span>
+                                </div>
+                                <span class="text-bold">$10</span>
+                            </label>
 
                             <div class="form-row">
                                 <div class="form-group">
@@ -568,6 +578,7 @@
                                 <div id="vehiculoHistorialContent" class="historial-content-grid"></div>
                             </div>
                         </div>
+
 
                         <!-- SUB-PESTAÑA 3: EXPRESS -->
                         <div id="subTabExpress" class="form-subtab-content is-hidden">
@@ -1006,9 +1017,9 @@
             </label>
             <input type="number" step="0.50" min="0" class="form-control" id="modalInputPropina" placeholder="0.00" value="0.00" oninput="actualizarTotalModalPago()">
         </div>
-        
+
       <div id="modalInfoDescuento" class="modal-info-descuento"></div>
-      
+
         <div class="payment-total-box">
             <span class="text-sm font-bold color-sky-dark">TOTAL RECIBIDO:</span>
             <strong id="modalMontoTotalCobro" class="text-lg color-sky">$0.00</strong>
@@ -1111,7 +1122,7 @@
     </div>
 
         <!-- Script Principal de la Aplicación -->
-    <script src="script.js?v=v3.2.1-oct2026"></script>
+    <script src="script.js?v=v3.2.2-oct2026"></script>
 
     <!-- Service Worker PWA -->
     <script>
