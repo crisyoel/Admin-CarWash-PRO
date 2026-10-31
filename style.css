@@ -1198,31 +1198,6 @@ select.form-control {
     border-radius: 10px;
     border: 1px solid #e2e8f0;
 }
-.servicios-opcion-motor {
-    display: flex;
-    align-items: center;
-    justify-content: space-between;
-    width: 100%;
-    padding: 10px 14px;
-    background: #ffffff;
-    border-radius: 10px;
-    border: 1px solid #cbd5e1;
-    margin: 12px 0 12px 0;
-    cursor: pointer;
-    font-size: 0.9rem;
-    font-weight: 600;
-    color: #334155;
-}
-.servicios-opcion-motor-inner {
-    display: flex;
-    align-items: center;
-    gap: 8px;
-}
-.servicios-opcion-motor input[type="checkbox"] {
-    width: 14px;
-    height: 14px;
-    accent-color: var(--primary);
-}
 .servicios-opcion {
     display: flex;
     align-items: center;
@@ -2947,3 +2922,7 @@ body.custom-select-open {
 .discount-detail-list::-webkit-scrollbar, .discount-detail-loans::-webkit-scrollbar,
 .discount-detail-list *::-webkit-scrollbar, .discount-detail-loans *::-webkit-scrollbar { display: none; }
 @media (prefers-reduced-motion: reduce) { .discount-detail-overlay, .discount-detail-modal { transition-duration: .01ms; } }
+#subTabServicio .servicios-contenedor > label:has(#servicioMotor) {
+    grid-column: 1 / -1 !important;
+    width: 100%;
+}
