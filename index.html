@@ -4,8 +4,6 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
     <title>Admin CarWash</title>
-
-    <!-- Meta Descripción -->
     <meta name="description" content="Sistema de gestión y control para lavados de autos. Administra registros de vehículos, servicios, tickets y seguimiento en tiempo real.">
 
     <!-- Integración PWA -->
@@ -15,11 +13,9 @@
     <meta name="mobile-web-app-capable" content="yes">
     <meta name="apple-mobile-web-app-capable" content="yes">
     <meta name="apple-mobile-web-app-status-bar-style" content="black-translucent">
-
     <meta http-equiv="Cache-Control" content="no-cache, no-store, must-revalidate">
     <meta http-equiv="Pragma" content="no-cache">
     <meta http-equiv="Expires" content="0">
-
 
     <!-- Fuentes e Iconos -->
     <link href="https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:wght@400;500;600;700;800&display=swap" rel="stylesheet">
@@ -45,9 +41,7 @@
             </div>
 
             <div id="authLoginError" class="auth-login-error"></div>
-
             <div id="authRegisterNote" class="auth-register-note">Crea la cuenta que usarás para acceder a tu Centro de Administración.</div>
-
             <form id="authLoginForm" onsubmit="iniciarSesion(event)">
                 <div class="form-group">
                     <label class="form-label">Correo electrónico</label>
@@ -436,15 +430,15 @@
                         <input type="hidden" id="recordClienteId">
                         <input type="hidden" id="recordDescuento" value="0">
 
-                        <!-- CLIENTE CON DESCUENTO FIJO (OPCIONAL) -->
-                        <div class="cliente-registro-box">
-                            <div class="cliente-registro-title"><i class="fa-solid fa-user-tag"></i> Cliente con descuento <span>(opcional)</span></div>
-                            <div class="relative-container">
-                                <input type="text" class="form-control" id="recordClienteSearch" placeholder="Buscar cliente por nombre o placa..." autocomplete="off" oninput="renderRegistroClientesSuggestions(this.value)">
-                                <div id="registroClienteSuggestions" class="placa-suggestions-dropdown is-hidden"></div>
-                            </div>
-                            <div id="registroClienteSeleccionado" class="cliente-seleccionado-box is-hidden"></div>
-                            <div id="registroClienteVehiculos" class="cliente-vehiculos-chips is-hidden"></div>
+                       <!-- CLIENTE CON DESCUENTO FIJO (OPCIONAL) -->
+                       <div class="cliente-registro-box">
+                          <div class="relative-container cliente-registro-search">
+                               <i class="fa-solid fa-user-tag cliente-registro-search-icon"></i>
+                                   <input type="text" class="form-control" id="recordClienteSearch" placeholder="Cliente con descuento (opcional)..." autocomplete="off" oninput="renderRegistroClientesSuggestions(this.value)">
+                               <div id="registroClienteSuggestions" class="placa-suggestions-dropdown is-hidden"></div>
+                           </div>
+                       <div id="registroClienteSeleccionado" class="cliente-seleccionado-box is-hidden"></div>
+                          <div id="registroClienteVehiculos" class="cliente-vehiculos-chips is-hidden"></div>
                         </div>
 
                         <!-- SUB-PESTAÑA 1: VEHÍCULO -->
@@ -509,32 +503,51 @@
                                 <i class="fa-solid fa-soap icon-primary"></i> Tipo de Lavado
                             </label>
 
-                            <div class="servicios-contenedor">
-                                <label class="servicios-opcion">
-                                    <input type="radio" name="serviciosMulti" value="Completo" checked onchange="onServiciosCheckboxChange()">
-                                    Completo
-                                </label>
+                            
+<div class="servicios-contenedor">
+    <label class="servicios-opcion">
+        <input type="radio" name="serviciosMulti" value="Completo" checked onchange="onServiciosCheckboxChange()">
+        Completo
+    </label>
 
-                                <label class="servicios-opcion">
-                                    <input type="radio" name="serviciosMulti" value="Sencillo" onchange="onServiciosCheckboxChange()">
-                                    Sencillo
-                                </label>
+    <label class="servicios-opcion">
+        <input type="radio" name="serviciosMulti" value="Sencillo" onchange="onServiciosCheckboxChange()">
+        Sencillo
+    </label>
 
-                                <label class="servicios-opcion">
-                                    <input type="radio" name="serviciosMulti" value="Fuera" onchange="onServiciosCheckboxChange()">
-                                    Por Fuera
-                                </label>
+    <label class="servicios-opcion">
+        <input type="radio" name="serviciosMulti" value="Fuera" onchange="onServiciosCheckboxChange()">
+        Por Fuera
+    </label>
 
-                                <label class="servicios-opcion">
-                                    <input type="radio" name="serviciosMulti" value="Interior" onchange="onServiciosCheckboxChange()">
-                                    Interior
-                                </label>
+    <label class="servicios-opcion">
+        <input type="radio" name="serviciosMulti" value="Interior" onchange="onServiciosCheckboxChange()">
+        Interior
+    </label>
+</div>
 
-                                <label class="servicios-opcion">
-                                    <input type="checkbox" id="servicioMotor" onchange="onServiciosCheckboxChange()">
-                                    Lavado de Motor <span class="text-bold">$10</span>
-                                </label>
-                            </div>
+<!-- SERVICIO ADICIONAL: LAVADO DE MOTOR -->
+<label class="servicio-motor-card">
+    <span class="servicio-motor-icon">
+        <i class="fa-solid fa-gears"></i>
+    </span>
+
+    <span class="servicio-motor-info">
+        <span class="servicio-motor-title">
+            Lavado de Motor
+            <small>ADICIONAL</small>
+        </span>
+        <span class="servicio-motor-description">
+            Dale una limpieza extra a tu vehículo
+        </span>
+    </span>
+
+    <span class="servicio-motor-action">
+        <strong>$10</strong>
+        <input type="checkbox" id="servicioMotor" onchange="onServiciosCheckboxChange()">
+    </span>
+</label>
+
 
                             <div class="form-row">
                                 <div class="form-group">
@@ -842,7 +855,6 @@
                     <i class="fa-solid fa-file-invoice-dollar"></i> Generar Reporte del Día
                 </button>
             </div>
-
         </div>
 
         <!-- ===============================================================
@@ -1110,7 +1122,7 @@
     </div>
 
     <!-- Script Principal de la Aplicación -->
-    <script src="script.js?v=v3.2.9-oct2026"></script>
+    <script src="script.js?v=v3.3.0-oct2026"></script>
 
     <!-- Service Worker PWA -->
     <script>
