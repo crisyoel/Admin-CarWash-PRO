@@ -575,11 +575,16 @@
                             </div>
 
                             <div id="vehiculoHistorialContainer" class="vehiculo-historial-box is-hidden">
-                                <div class="historial-header-title">
-                                    <i class="fa-solid fa-clock-rotate-left"></i> Historial y Estadísticas del Vehículo
-                                </div>
-                                <div id="vehiculoHistorialContent" class="historial-content-grid"></div>
-                            </div>
+    <button type="button" class="historial-header-title" onclick="toggleVehiculoHistorial()">
+        <span>
+            <i class="fa-solid fa-clock-rotate-left"></i>
+            Historial y Estadísticas del Vehículo
+        </span>
+        <i class="fa-solid fa-chevron-down historial-arrow"></i>
+    </button>
+
+    <div id="vehiculoHistorialContent" class="historial-content-grid"></div>
+</div>
                         </div>
 
                         <!-- SUB-PESTAÑA 3: EXPRESS -->
