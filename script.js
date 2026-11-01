@@ -4,10 +4,10 @@
    ================================================== */
 
 /* ==================================================
-   CONTROL DE VERSIÓN OFICIAL - VERSIÓN 3.3.7
+   CONTROL DE VERSIÓN OFICIAL - VERSIÓN 3.3.9
    ================================================== */
 const STORAGE_KEY = 'admin_carwash_data_v3';
-const SCRIPT_VERSION = 'v3.3.7-oct2026';
+const SCRIPT_VERSION = 'v3.3.9-oct2026';
 
 /* ==================================================
    ALERTAS PERSONALIZADAS
@@ -768,14 +768,16 @@ function switchAutoTab(tab) {
         setFabVisibility(true);
 
     } else if (tab === 'nuevo') {
-        document.getElementById('autoTabNuevo').style.display = 'block';
+    document.getElementById('autoTabNuevo').style.display = 'block';
 
-        setFabVisibility(false);
+    setFabVisibility(false);
 
-        montoModificadoManual = false;
-        onServiciosCheckboxChange();
-        actualizarPrecioExpress();
-    }
+    switchFormSubTab('vehiculo');
+
+    montoModificadoManual = false;
+    onServiciosCheckboxChange();
+    actualizarPrecioExpress();
+}
 
     renderRecordsList();
 }
@@ -817,6 +819,13 @@ function switchFormSubTab(subTabName) {
     if (activeBtn) activeBtn.classList.add('active');
     if (activeContent) activeContent.classList.remove('is-hidden');
 
+    // Visibilidad del buscador de clientes con descuento
+    const clienteDescuento = document.querySelector('.cliente-registro-box');
+    if (clienteDescuento) {
+    clienteDescuento.classList.toggle('is-hidden', subTabName !== 'vehiculo');
+}
+
+    // Visibilidad y texto del botón Guardar
     const btnGuardar = document.getElementById('btnGuardarAuto');
     if (btnGuardar) {
     btnGuardar.classList.toggle('is-hidden', subTabName === 'vehiculo');
@@ -1314,7 +1323,7 @@ function resetAutoForm() {
     const editIdInput = document.getElementById('editRecordId');
     if(editIdInput) editIdInput.value = '';
     const titleText = document.getElementById('formTitleText');
-    if(titleText) titleText.innerHTML = '<i class="fa-solid fa-circle-plus"></i> Agregar';
+    if(titleText) titleText.innerHTML = '<i class="fa-solid fa-circle-plus"></i> Registrar';
     const badge = document.getElementById('placaStatusBadge');
     if(badge) {
         badge.textContent='Vehículo Nuevo';
