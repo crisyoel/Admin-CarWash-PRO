@@ -4,10 +4,10 @@
    ================================================== */
 
 /* ==================================================
-   CONTROL DE VERSIÓN OFICIAL - VERSIÓN 3.3.0
+   CONTROL DE VERSIÓN OFICIAL - VERSIÓN 3.3.7
    ================================================== */
 const STORAGE_KEY = 'admin_carwash_data_v3';
-const SCRIPT_VERSION = 'v3.3.5-oct2026';
+const SCRIPT_VERSION = 'v3.3.7-oct2026';
 
 /* ==================================================
    ALERTAS PERSONALIZADAS
@@ -819,10 +819,12 @@ function switchFormSubTab(subTabName) {
 
     const btnGuardar = document.getElementById('btnGuardarAuto');
     if (btnGuardar) {
-        btnGuardar.innerHTML = subTabName === 'express'
-            ? '<i class="fa-solid fa-bolt"></i> Guardar Registro Express'
-            : '<i class="fa-solid fa-floppy-disk"></i> Guardar Registro de Vehículo';
-    }
+    btnGuardar.classList.toggle('is-hidden', subTabName === 'vehiculo');
+
+    btnGuardar.innerHTML = subTabName === 'express'
+        ? '<i class="fa-solid fa-bolt"></i> Guardar Registro Express'
+        : '<i class="fa-solid fa-floppy-disk"></i> Guardar Registro de Vehículo';
+}
 
     if (subTabName === 'express') actualizarPrecioExpress();
 }
