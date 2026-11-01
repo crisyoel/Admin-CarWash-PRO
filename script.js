@@ -4,27 +4,22 @@
    ================================================== */
 
 /* ==================================================
-   CONTROL DE VERSIÓN OFICIAL - VERSIÓN 3.2.9
+   CONTROL DE VERSIÓN OFICIAL - VERSIÓN 3.3.0
    ================================================== */
 const STORAGE_KEY = 'admin_carwash_data_v3';
-const SCRIPT_VERSION = 'v3.2.9-oct2026';
-
+const SCRIPT_VERSION = 'v3.3.0-oct2026';
 
 /* ==================================================
    ALERTAS PERSONALIZADAS
-   Reemplaza la alerta nativa del navegador por un modal
-   visual consistente con el diseño de la aplicación.
    ================================================== */
-/* ==================================================
-   VENTANA DE CONFIRMACIÓN ESTILO NATIVO (IDÉNTICO A CAJA CERRADA)
-   ================================================== */
+
 function showAppConfirm(message, onConfirm) {
     let modal = document.getElementById('appConfirmModal');
 
     if (!modal) {
         modal = document.createElement('div');
         modal.id = 'appConfirmModal';
-        modal.className = 'app-alert-overlay'; // Usa la misma capa oscura de tus modales
+        modal.className = 'app-alert-overlay';
         modal.innerHTML = `
             <div class="app-alert-card" role="dialog" aria-modal="true" style="text-align: center;">
                 <div class="app-alert-icon" style="background: rgba(239, 68, 68, 0.1); color: #ef4444; margin: 0 auto 16px auto;">
@@ -63,8 +58,6 @@ function showAppConfirm(message, onConfirm) {
         modal.classList.remove('open');
     });
 }
-
-
 function showAppAlert(message) {
     let modal = document.getElementById('appAlertModal');
 
@@ -84,55 +77,16 @@ function showAppAlert(message) {
 
     const msg = modal.querySelector('.app-alert-message');
     if (msg) msg.textContent = String(message ?? '');
+
     modal.classList.add('open');
 }
-
-// Asegúrate de que esta función ESTÉ ANTES de la línea que la usa
-function showAppAlert(message) {
-    let modal = document.getElementById('appAlertModal');
-
-    if (!modal) {
-        modal = document.createElement('div');
-        modal.id = 'appAlertModal';
-        modal.className = 'app-alert-overlay';
-        modal.innerHTML = `
-            <div class="app-alert-card" role="alertdialog" aria-modal="true">
-                <div class="app-alert-icon"><i class="fa-solid fa-circle-exclamation"></i></div>
-                <div class="app-alert-title">Atención</div>
-                <div class="app-alert-message"></div>
-                <button type="button" class="app-alert-button" onclick="closeAppAlert()">Entendido</button>
-            </div>`;
-        document.body.appendChild(modal);
-    }
-
-    const msg = modal.querySelector('.app-alert-message');
-    if (msg) msg.textContent = String(message ?? '');
-    modal.classList.add('open');
-}
-
 function closeAppAlert() {
     document.getElementById('appAlertModal')?.classList.remove('open');
 }
 
-// Sobrescribimos el alert nativo CON SEGURIDAD
-if (typeof showAppAlert === 'function') {
-    window.alert = showAppAlert;
-    console.log('✅ Alert personalizado cargado correctamente');
-}
-
-
-function closeAppAlert() {
-    document.getElementById('appAlertModal')?.classList.remove('open');
-}
-
-// Sobrescribimos el alert nativo CON SEGURIDAD
-if (typeof showAppAlert === 'function') {
-    window.alert = showAppAlert;
-    console.log('✅ Alert personalizado cargado correctamente');
-} else {
-    console.warn('⚠️ showAppAlert no está definida aún');
-}
-
+// Sobrescribimos el alert nativo
+window.alert = showAppAlert;
+console.log('✅ Alert personalizado cargado correctamente');
 
 /* ==================================================
    SELECTORES PERSONALIZADOS
@@ -202,7 +156,6 @@ function abrirSelectorPersonalizado(select) {
         }
     });
 }
-
 function inicializarSelectoresPersonalizados() {
     document.querySelectorAll('select').forEach(select => {
         if (select.dataset.customSelectReady === '1') return;
@@ -247,7 +200,6 @@ function inicializarSelectoresPersonalizados() {
         });
     });
 }
-
 document.addEventListener('DOMContentLoaded', inicializarSelectoresPersonalizados);
 
 /* ==================================================
@@ -261,7 +213,6 @@ function clearFieldError(field) {
     const old = field.closest('.form-group, .gasto-destino-row, .relative-container')?.querySelector('.field-error-message[data-for="' + field.id + '"]');
     if (old) old.remove();
 }
-
 function showFieldError(field, message) {
     if (!field) return;
 
@@ -280,7 +231,6 @@ function showFieldError(field, message) {
     field.scrollIntoView({ behavior: 'smooth', block: 'center' });
     setTimeout(() => field.focus({ preventScroll: true }), 220);
 }
-
 
 /* Captura validaciones nativas para mostrar el mismo mensaje compacto
    debajo del campo y llevar al usuario hasta él. */
@@ -307,11 +257,9 @@ document.addEventListener('invalid', function(ev) {
 
     showFieldError(field, mensajes[field.id] || 'Este campo es obligatorio');
 }, true);
-
 document.addEventListener('input', function(ev) {
     if (ev.target?.classList?.contains('field-error')) clearFieldError(ev.target);
 });
-
 document.addEventListener('change', function(ev) {
     if (ev.target?.classList?.contains('field-error')) clearFieldError(ev.target);
 });
@@ -367,7 +315,6 @@ const TARIFA_MATRIZ = {
     }
 };
 
-
 /* ==================================================
    SECCIÓN: MAPPING Y NORMALIZACIÓN DE COLORES CSS
    ================================================== */
@@ -415,14 +362,12 @@ function splitMonto(monto) {
         adminNeto: adminNeto
     };
 }
-
 function getMontoCobro(r) {
     const monto = Math.max(0, parseFloat(r?.monto) || 0);
     const descuento = Math.min(monto, Math.max(0, parseFloat(r?.descuento) || 0));
     const propina = Math.max(0, parseFloat(r?.propina) || 0);
     return Math.max(0, monto - descuento) + propina;
 }
-
 function calculateGlobalTotals() {
     const ganadoPorLavador = {}, propinasPorLavador = {}, totalLavadorConPropina = {}, autosPorLavador = {}, adminBrutoPorLavador = {};
     let totalLav = 0, totalProp = 0, totalAdminBruto = 0, totalSub = 0;
@@ -523,7 +468,6 @@ Object.keys(totalLavadorConPropina).forEach(l => {
         totalAdminNetEarn: Math.max(0, totalAdminBruto - totalSub)
     };
 }
-
 function getDefaultData() {
     return {
         cajaBase: 0.00,
@@ -552,7 +496,6 @@ let montoModificadoManual = false;
 /* ==================================================
    SECCIÓN: CARGA Y GUARDADO DE DATOS
    ================================================== */
-
 function loadData() {
     const stored = localStorage.getItem(STORAGE_KEY);
 
@@ -609,11 +552,9 @@ function loadData() {
     }
 }
 
-
 /* ==================================================
    SECCIÓN: SINCRONIZACIÓN INICIAL CON SUPABASE
    ================================================== */
-
 async function sincronizarDatosInicialesSupabase() {
     try {
         const { data: sesionData, error: sesionError } =
@@ -685,35 +626,29 @@ async function sincronizarDatosInicialesSupabase() {
         console.error('Error inesperado en sincronización inicial:', error);
     }
 }
-
 function getClienteById(id) {
     if (!id) return null;
     return appData.clientes.find(c => c.id === id) || null;
 }
-
 function escapeHtml(value) {
     return String(value ?? '').replace(/[&<>'"]/g, ch => ({'&':'&amp;','<':'&lt;','>':'&gt;',"'":'&#39;',"\"":'&quot;'}[ch]));
 }
-
 function normalizarClienteVehiculos(cliente) {
     cliente.vehiculos = Array.isArray(cliente.vehiculos)
         ? cliente.vehiculos.map(p => String(p).trim().toUpperCase()).filter(Boolean)
         : [];
     cliente.vehiculos = [...new Set(cliente.vehiculos)];
 }
-
 function guardarAsociacionVehiculo(cliente, placa) {
     const p = String(placa || '').trim().toUpperCase();
     if (!p) return;
     normalizarClienteVehiculos(cliente);
     if (!cliente.vehiculos.includes(p)) cliente.vehiculos.push(p);
 }
-
 function removeAsociacionVehiculo(cliente, placa) {
     normalizarClienteVehiculos(cliente);
     cliente.vehiculos = cliente.vehiculos.filter(p => p !== String(placa).trim().toUpperCase());
 }
-
 async function saveData() {
     // 1. Guardado local inmediato para que la app responda al instante
     localStorage.setItem(STORAGE_KEY, JSON.stringify(appData));
@@ -755,7 +690,6 @@ async function saveData() {
         console.error('Error inesperado en la sincronización con Supabase:', err);
     }
 }
-
 
 /* ==================================================
    SECCIÓN: NAVEGACIÓN Y PESTAÑAS
@@ -802,7 +736,6 @@ function switchView(viewName) {
 
     window.scrollTo(0, 0);
 }
-
 function switchAutoTab(tab) {
     currentAutoTab = tab;
 
@@ -855,7 +788,6 @@ function guardarRegistroFormulario(e) {
     }
     saveAutoRecord(e);
 }
-
 function switchFormSubTab(subTabName) {
     currentFormSubTab = subTabName;
 
@@ -938,7 +870,6 @@ function setFabVisibility(visible) {
         fabButton.classList.add('fab-hidden');
     }, 250);
 }
-
 function openFloatingRegister() {
     switchView('autos');
     resetAutoForm();
@@ -954,9 +885,7 @@ function calcularPagosRealizados() {
     appData.pagosLavadores.forEach(p => { pagado[p.lavador] = (pagado[p.lavador]||0) + p.monto; });
     return pagado;
 }
-
 function calculatePreviewSplit(m) { return splitMonto(m); }
-
 function calculatePreview() {
     const m = document.getElementById('recordMonto')?.value || 0;
     const p = parseFloat(document.getElementById('recordPropina')?.value) || 0;
@@ -970,7 +899,6 @@ function calculatePreview() {
     if(elAdminBruto) elAdminBruto.textContent = `$${s.adminBruto.toFixed(2)}`;
     if(elProp) elProp.textContent = `$${p.toFixed(2)}`;
 }
-
 function onServiciosCheckboxChange() {
     if (montoModificadoManual) return;
 
@@ -998,7 +926,6 @@ function onServiciosCheckboxChange() {
 
     calculatePreview();
 }
-
 function onTipoVehiculoChange() { montoModificadoManual = false; onServiciosCheckboxChange(); }
 
 document.addEventListener('input', e => {
@@ -1059,11 +986,15 @@ function onPlacaInput(val) {
     }
 }
 
+function toggleVehiculoHistorial() {
+    const hist = document.getElementById('vehiculoHistorialContainer');
+    if (hist) hist.classList.toggle('expanded');
+}
+
 document.addEventListener('click', e => {
     const d = document.getElementById('placaSuggestions'), i = document.getElementById('recordPlaca');
     if (d && i && !d.contains(e.target) && e.target !== i) d.style.display = 'none';
 });
-
 function selectVehiculoFromSuggestion(p) {
     const inputPlaca = document.getElementById('recordPlaca');
     if (inputPlaca) inputPlaca.value = p;
@@ -1080,7 +1011,6 @@ function selectVehiculoFromSuggestion(p) {
         autocompletarVehiculo(appData.vehiculosRegistry[p]);
     }
 }
-
 function autocompletarVehiculo(v) {
     document.getElementById('recordMarca').value = v.marca||'';
     document.getElementById('recordModelo').value = v.modelo||'';
@@ -1094,12 +1024,11 @@ function autocompletarVehiculo(v) {
     if (!editIdInput || !editIdInput.value) { montoModificadoManual=false; onServiciosCheckboxChange(); }
     renderVehiculoHistorial(v.placa);
 }
-
 function renderVehiculoHistorial(placa) {
     const c = document.getElementById('vehiculoHistorialContainer'), cont = document.getElementById('vehiculoHistorialContent');
     if(!c || !cont) return;
     const v = appData.vehiculosRegistry[placa];
-    if (!v?.historialVisitas?.length) { c.style.display='none'; return; }
+    if (!v?.historialVisitas?.length) {     c.classList.remove('expanded');     c.style.display = 'none';     return; }
     const vis = v.historialVisitas, ult = vis[vis.length-1];
     cont.innerHTML = `
         <div>• <strong>Visitas:</strong> ${vis.length}</div>
@@ -1108,14 +1037,12 @@ function renderVehiculoHistorial(placa) {
         <div>• <strong>Total Gastado:</strong> $${vis.reduce((a,b)=>a+(parseFloat(b.monto)||0)+(parseFloat(b.propina)||0),0).toFixed(2)}</div>
         <div>• <strong>Frecuente:</strong> ${v.frecuente?'SÍ ⭐':'NO'}</div>
     `;
-    c.style.display = 'block';
+    c.classList.remove('expanded'); c.style.display = 'block';
 }
-
 function asignarPista(valor) {
     const inputPista = document.getElementById('recordPista');
     if (inputPista) inputPista.value = valor;
 }
-
 function marcarFueraDePista(id) {
     if (appData.cajaCerrada) { alert('⚠️ Caja cerrada'); return; }
     const r = appData.registros.find(x => x.id === id);
@@ -1149,7 +1076,6 @@ function actualizarPrecioExpress() {
 
     input.value = `$${monto.toFixed(2)}`;
 }
-
 function guardarRegistroExpress(e) {
     if (e && typeof e.preventDefault === 'function') e.preventDefault();
     if (appData.cajaCerrada) {
@@ -1257,7 +1183,6 @@ function guardarRegistroExpress(e) {
     switchFormSubTab('express');
     switchAutoTab('pista');
 }
-
 function saveAutoRecord(e) {
     if (e && typeof e.preventDefault === 'function') e.preventDefault();
     if (appData.cajaCerrada) { alert('⚠️ Caja cerrada'); return; }
@@ -1381,7 +1306,6 @@ function saveAutoRecord(e) {
     resetAutoForm();
     switchAutoTab('pendientes'); 
 }
-
 function resetAutoForm() {
     const form = document.getElementById('autoForm');
     if(form) form.reset();
@@ -1396,7 +1320,7 @@ function resetAutoForm() {
     }
     asignarPista('');
     const histContainer = document.getElementById('vehiculoHistorialContainer');
-    if(histContainer) histContainer.style.display='none';
+    if(histContainer) {     histContainer.classList.remove('expanded');     histContainer.style.display = 'none'; }
     const estadoPagoInput = document.getElementById('recordEstadoPago');
     if(estadoPagoInput) estadoPagoInput.value='PENDIENTE';
     const propinaInput = document.getElementById('recordPropina');
@@ -1425,7 +1349,6 @@ function resetAutoForm() {
     onServiciosCheckboxChange();
     actualizarPrecioExpress();
 }
-
 function editRecord(id) {
     if (appData.cajaCerrada) { alert('⚠️ Caja cerrada'); return; }
     const r = appData.registros.find(x => x.id === id); if (!r) return;
@@ -1503,7 +1426,6 @@ function updateAutoBadges() {
     if (bPista) bPista.textContent = arrPista.length;
     if (bPag) bPag.textContent = arrPagados.length;
 }
-
 function renderRecordsList() {
     updateAutoBadges();
 
@@ -1515,7 +1437,6 @@ function renderRecordsList() {
         renderSubList('recordsPagadosListContainer', 'searchRecordInputPagados', r => r.estadoPago === 'PAGADO');
     }
 }
-
 function renderSubList(containerId, searchInputId, filterFn) {
     const c = document.getElementById(containerId); 
     if (!c) return;
@@ -1698,7 +1619,6 @@ function solicitarTipoPago(id) {
 
     if (modal) modal.classList.add('open');
 }
-
 function actualizarTotalModalPago() {
     if (!paymentModalRecordId) return;
     const r = appData.registros.find(x => x.id === paymentModalRecordId);
@@ -1712,13 +1632,11 @@ function actualizarTotalModalPago() {
 
     if (total) total.textContent = `$${(montoNeto + propina).toFixed(2)}`;
 }
-
 function closePaymentModal() {
     const modal = document.getElementById('paymentModal');
     if (modal) modal.classList.remove('open');
     paymentModalRecordId = null;
 }
-
 function confirmarPagoMetodo(metodo) {
     if (!paymentModalRecordId) return;
     const id = paymentModalRecordId;
@@ -1729,7 +1647,6 @@ function confirmarPagoMetodo(metodo) {
 
     registrarPagoModal(id, metodo);
 }
-
 function registrarPagoModal(id, metodo) {
     const r = appData.registros.find(x => x.id === id);
     if (!r) {
@@ -1752,11 +1669,9 @@ function registrarPagoModal(id, metodo) {
     saveData();
 }
 
-
 /* ==================================================
    MODAL: CONCILIACIÓN DE YAPPY (Sincronizado con CSS .open)
    ================================================== */
-
 function openModalYappy() {
     const modal = document.getElementById('modalYappy');
     const container = document.getElementById('yappyListContainer');
@@ -1857,7 +1772,6 @@ function openModalYappy() {
 
     modal.classList.add('open');
 }
-
 function closeModalYappy() {
     const modal = document.getElementById('modalYappy');
 
@@ -1873,7 +1787,6 @@ function closeModalYappy() {
         modal.classList.add('is-hidden');
     }, 300);
 }
-
 function toggleVerificadoYappy(id) {
     const registros = appData?.registros || appData?.autos || [];
     const registro = registros.find(r => String(r.id) === String(id));
@@ -1884,7 +1797,6 @@ function toggleVerificadoYappy(id) {
         openModalYappy(); // Recarga la lista e incrementa los montos verificados
     }
 }
-
 
 /* ==================================================
    SECCIÓN: RESUMEN DE LAVADORES EN INICIO
@@ -1972,7 +1884,6 @@ function renderCajaUI() {
         }
     }
 }
-
 function updateUI() {
     const g = calculateGlobalTotals();
 
@@ -2301,7 +2212,6 @@ function pagarLavador(nombre, monto) {
         saveData();
     });
 }
-
 function renderPagosCaja() {
     const c = document.getElementById('pagosLavadoresCaja');
     if (!c) return;
@@ -2350,8 +2260,6 @@ appData.lavadores.forEach(lav => {
     c.innerHTML = html;
 }
 
-
-
 /* ==================================================
    SECCIÓN: CIERRE Y CONTROL DE CAJA
    ================================================== */
@@ -2361,12 +2269,10 @@ function toggleCierreCaja() {
     renderCajaUI();
     alert(appData.cajaCerrada ? '🔒 Caja cerrada. Ya puedes generar el reporte.' : '🔓 Caja reabierta.');
 }
-
 function actualizarDisplayCajaBase() {
     const d = document.getElementById('cajaBaseDisplay');
     if (d) d.textContent = `$${(appData.cajaBase||0).toFixed(2)}`;
 }
-
 function populateSelects() {
     const s = document.getElementById('recordLavador');
     const e = document.getElementById('expressLavador');
@@ -2403,9 +2309,7 @@ function addIngresoExtra(e) {
         saveData();
     }
 }
-
 function deleteIngresoExtra(id) { if (appData.cajaCerrada) return; appData.ingresosExtras = appData.ingresosExtras.filter(i=>i.id!==id); saveData(); }
-
 function renderIngresosExtrasList() {
     const c = document.getElementById('ingresosExtrasListContainer'); if (!c) return;
     if (!appData.ingresosExtras?.length) { c.innerHTML = '<p style="text-align:center;color:var(--gray-400);padding:10px;">Sin ingresos extra.</p>'; return; }
@@ -2414,7 +2318,6 @@ function renderIngresosExtrasList() {
         c.innerHTML += `<div class="list-card" style="padding:10px 14px;"><div class="list-card-info"><h4 style="font-size:.9rem;">${i.concepto} <span style="font-size:0.7rem;color:var(--gray-400);">· ${i.timestamp}</span></h4></div><div style="display:flex;gap:10px;align-items:center;"><strong style="color:var(--success);">$${parseFloat(i.monto).toFixed(2)}</strong><button class="btn-icon danger" style="width:28px;height:28px;" onclick="deleteIngresoExtra('${i.id}')"><i class="fa-solid fa-trash"></i></button></div></div>`;
     });
 }
-
 function actualizarDestinoGasto() {
     const tipo = document.getElementById('gastoTipo')?.value || 'GENERAL';
     const lavador = document.getElementById('gastoLavador');
@@ -2433,7 +2336,6 @@ function actualizarDestinoGasto() {
         lavador.classList.add('is-hidden');
     }
 }
-
 function addGasto(e) {
     if (e && typeof e.preventDefault === 'function') e.preventDefault();
     if (appData.cajaCerrada) { alert('⚠️ Caja cerrada'); return; }
@@ -2470,9 +2372,7 @@ function addGasto(e) {
     actualizarDestinoGasto();
     saveData();
 }
-
 function deleteGasto(id) { if (appData.cajaCerrada) return; appData.gastos = appData.gastos.filter(g=>g.id!==id); saveData(); }
-
 function renderGastosList() {
     const c = document.getElementById('gastosListContainer');
     if (!c) return;
@@ -2558,7 +2458,6 @@ function actualizarTickerDescuentos() {
     ticker.classList.add('fade-in');
     ticker.textContent = `${item.nombre} -$${item.monto.toFixed(2)}`;
 }
-
 function iniciarTickerDescuentos() {
     if (descuentosTickerTimer) clearInterval(descuentosTickerTimer);
     actualizarTickerDescuentos();
@@ -2598,16 +2497,13 @@ function openClienteModal(index = '') {
     renderClienteModalVehiculos();
     document.getElementById('clienteModal')?.classList.add('open');
 }
-
 function editarCliente(i) {
     if (!appData.clientes[i]) return;
     openClienteModal(i);
 }
-
 function closeClienteModal() {
     document.getElementById('clienteModal')?.classList.remove('open');
 }
-
 function renderClienteModalVehiculos() {
     const c = document.getElementById('clienteModalVehiculosList');
     if (!c) return;
@@ -2622,7 +2518,6 @@ function renderClienteModalVehiculos() {
             <button type="button" onclick="quitarVehiculoClienteModal('${escapeHtml(p)}')" style="border:0;background:none;color:var(--danger);padding:0;cursor:pointer;"><i class="fa-solid fa-xmark"></i></button>
         </span>`).join('');
 }
-
 function agregarVehiculoClienteModal() {
     const input = document.getElementById('clienteModalVehiculoInput');
     const placa = input?.value.trim().toUpperCase() || '';
@@ -2631,12 +2526,10 @@ function agregarVehiculoClienteModal() {
     if (input) input.value = '';
     renderClienteModalVehiculos();
 }
-
 function quitarVehiculoClienteModal(placa) {
     clienteModalVehiculos = clienteModalVehiculos.filter(p => p !== String(placa).trim().toUpperCase());
     renderClienteModalVehiculos();
 }
-
 function saveClienteFromModal(e) {
     if (e && typeof e.preventDefault === 'function') e.preventDefault();
     const idx = document.getElementById('editClienteIndex')?.value || '';
@@ -2666,7 +2559,6 @@ function saveClienteFromModal(e) {
     saveData();
     closeClienteModal();
 }
-
 function deleteCliente(i) {
     if (appData.clientes[i]?.protegido) { alert('⚠️ Cliente General no se borra'); return; }
     if (!appData.clientes[i]) return;
@@ -2674,7 +2566,6 @@ function deleteCliente(i) {
     appData.clientes.splice(i, 1);
     saveData();
 }
-
 function renderClientsList() {
     const c = document.getElementById('clientsListContainer');
     if (!c) return;
@@ -2703,7 +2594,6 @@ function renderClientsList() {
         </div>`;
     });
 }
-
 function renderRegistroClientesSuggestions(value = '') {
     const drop = document.getElementById('registroClienteSuggestions');
     if (!drop) return;
@@ -2731,7 +2621,6 @@ function renderRegistroClientesSuggestions(value = '') {
     drop.classList.remove('is-hidden');
     drop.style.display = 'block';
 }
-
 function seleccionarClienteRegistro(id) {
     const cliente = getClienteById(id);
     if (!cliente) return;
@@ -2748,7 +2637,6 @@ function seleccionarClienteRegistro(id) {
     }
     renderRegistroClienteSeleccionado();
 }
-
 function renderRegistroClienteSeleccionado() {
     const box = document.getElementById('registroClienteSeleccionado');
     const chips = document.getElementById('registroClienteVehiculos');
@@ -2772,7 +2660,6 @@ function renderRegistroClienteSeleccionado() {
             : '<span style="font-size:.75rem;color:var(--gray-400);">Este cliente no tiene placas asociadas.</span>';
     }
 }
-
 function seleccionarVehiculoClienteRegistro(placa) {
     const id = document.getElementById('recordClienteId')?.value || '';
     const cliente = getClienteById(id);
@@ -2792,7 +2679,6 @@ function seleccionarVehiculoClienteRegistro(placa) {
     const descuento = document.getElementById('recordDescuento');
     if (descuento) descuento.value = (parseFloat(cliente.descuento)||0).toFixed(2);
 }
-
 function limpiarClienteRegistro() {
     const id = document.getElementById('recordClienteId');
     const search = document.getElementById('recordClienteSearch');
@@ -2816,7 +2702,6 @@ function addLavador(e) {
         saveData(); 
     }
 }
-
 function deleteLavador(n) {
     if (appData.cajaCerrada) { alert('⚠️ Caja cerrada'); return; }
     showAppConfirm(`¿Estás seguro de eliminar al lavador "${n}"?`, () => {
@@ -2824,7 +2709,6 @@ function deleteLavador(n) {
         saveData();
     });
 }
-
 function renderLavadoresList() {
     const c = document.getElementById('lavadoresListContainer'); 
     if (!c) return;
@@ -2867,11 +2751,8 @@ function addInventarioItem(e) {
     const s = parseInt(document.getElementById('invItemStock')?.value)||0;
     if (n) { appData.inventario.push({ id:'inv_'+Date.now(), name:n, stock:s }); document.getElementById('invItemName').value=''; document.getElementById('invItemStock').value=''; saveData(); }
 }
-
 function updateStock(id, d) { const it = appData.inventario.find(i=>i.id===id); if (it) { it.stock = Math.max(0, it.stock+d); saveData(); } }
-
 function deleteInventarioItem(id) { appData.inventario = appData.inventario.filter(i=>i.id!==id); saveData(); }
-
 function renderInventarioList() {
     const c = document.getElementById('inventarioListContainer'); if (!c) return;
     if (!appData.inventario?.length) { c.innerHTML = `<div class="empty-state"><i class="fa-solid fa-box-open"></i><p>Sin insumos.</p></div>`; return; }
@@ -2893,9 +2774,7 @@ function openCajaModal() {
 
     document.getElementById('cajaModal').classList.add('open');
 }
-
 function closeCajaModal() { document.getElementById('cajaModal').classList.remove('open'); }
-
 function saveCajaBase(e) {
     if (e && typeof e.preventDefault === 'function') e.preventDefault();
     const v = parseFloat(document.getElementById('inputCajaBaseModal').value);
@@ -2975,11 +2854,9 @@ ${det || '  (Sin lavadores activos)\n'}• Total Pagado:       $${pl.toFixed(2)}
     if (reportElem) reportElem.textContent = r;
     return r;
 }
-
 function copyReportToClipboard() { 
     navigator.clipboard.writeText(generateReportText()).then(() => alert('📋 Reporte copiado al portapapeles.')); 
 }
-
 function verOCopiarReporteCierre() {
     switchView('reporte');
 }
@@ -2999,7 +2876,6 @@ function confirmResetData() {
         location.reload();
     });
 }
-
 
 /* ==================================================
    SUPABASE: INICIO DE SESIÓN
@@ -3032,15 +2908,12 @@ async function comprobarSesionSupabase() {
     mostrarLogin();
     return null;
 }
-
 function mostrarLogin() {
     document.getElementById('authLoginOverlay')?.classList.remove('is-hidden');
 }
-
 function ocultarLogin() {
     document.getElementById('authLoginOverlay')?.classList.add('is-hidden');
 }
-
 async function mostrarDatosCuenta() {
     const estado = document.getElementById('cuentaEstado');
     const email = document.getElementById('cuentaEmail');
@@ -3072,7 +2945,6 @@ async function mostrarDatosCuenta() {
         badge.style.color = '#166534';
     }
 }
-
 async function cerrarSesionCuenta() {
     const { error } = await supabaseClient.auth.signOut();
 
@@ -3084,14 +2956,12 @@ async function cerrarSesionCuenta() {
 
     console.log('Sesión cerrada correctamente.');
 }
-
 function mostrarLoginError(mensaje) {
     const el = document.getElementById('authLoginError');
     if (!el) return;
     el.textContent = mensaje;
     el.classList.add('show');
 }
-
 function limpiarLoginError() {
     const el = document.getElementById('authLoginError');
     if (!el) return;
@@ -3146,7 +3016,6 @@ async function crearUsuario(e) {
     if (btn) btn.disabled = false;
     if (loading) { loading.textContent = 'Verificando acceso...'; loading.classList.remove('show'); }
 }
-
 function mostrarRegistroCuenta() {
     const form = document.getElementById('authLoginForm');
     const btn = document.getElementById('authLoginSubmit');
@@ -3164,7 +3033,6 @@ function mostrarRegistroCuenta() {
     note?.classList.add('show');
     if (title) title.textContent = 'Crea tu cuenta para comenzar';
 }
-
 function volverAInicioSesion() {
     const form = document.getElementById('authLoginForm');
     const btn = document.getElementById('authLoginSubmit');
@@ -3182,7 +3050,6 @@ function volverAInicioSesion() {
     note?.classList.remove('show');
     if (title) title.textContent = 'Inicia sesión para continuar';
 }
-
 async function iniciarSesion(e) {
     if (e) e.preventDefault();
 
@@ -3239,7 +3106,6 @@ function loadBusinessLogo() {
     const s = localStorage.getItem(PROFILE_IMG_KEY);
     if (s && pi) pi.src = s;
 }
-
 document.addEventListener('DOMContentLoaded', async () => {
     const fi = document.getElementById('file-input'), pi = document.getElementById('profile-image');
     if (fi) fi.addEventListener('change', e => {
@@ -3294,7 +3160,6 @@ window.addEventListener('beforeinstallprompt', (event) => {
         document.body.appendChild(btn);
     }
 });
-
 window.addEventListener('appinstalled', () => {
     console.log('✅ CarWash Admin PRO fue instalada como PWA.');
     deferredInstallPrompt = null;
@@ -3490,7 +3355,6 @@ function abrirModalDescuentos() {
     void modal.offsetWidth;
     modal.classList.add('open');
 }
-
 function inicializarClickBannerDescuentos() {
     document.addEventListener('click', ev => {
         const banner = ev.target.closest('.discount-banner');
