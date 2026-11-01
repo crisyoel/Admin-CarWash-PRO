@@ -7,7 +7,7 @@
    CONTROL DE VERSIÓN OFICIAL - VERSIÓN 3.3.0
    ================================================== */
 const STORAGE_KEY = 'admin_carwash_data_v3';
-const SCRIPT_VERSION = 'v3.3.0-oct2026';
+const SCRIPT_VERSION = 'v3.3.5-oct2026';
 
 /* ==================================================
    ALERTAS PERSONALIZADAS
