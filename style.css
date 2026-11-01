@@ -1270,6 +1270,48 @@ select.form-control {
     gap: 4px;
 }
 
+/* --- Acordeón del Historial del Vehículo --- */
+
+.vehiculo-historial-box {
+    padding: 10px 12px;
+}
+
+.historial-header-title {
+    width: 100%;
+    margin-bottom: 0;
+    padding: 0;
+    border: none;
+    background: transparent;
+    cursor: pointer;
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    text-align: left;
+    font-family: inherit;
+}
+
+.historial-header-title span {
+    display: flex;
+    align-items: center;
+    gap: 6px;
+}
+
+.historial-arrow {
+    transition: transform 0.25s ease;
+}
+
+.vehiculo-historial-box:not(.expanded) .historial-content-grid {
+    display: none;
+}
+
+.vehiculo-historial-box.expanded .historial-header-title {
+    margin-bottom: 8px;
+}
+
+.vehiculo-historial-box.expanded .historial-arrow {
+    transform: rotate(180deg);
+}
+
 /* --- Tarjetas de Registros de Autos --- */
 .record-card {
     background: var(--white);
