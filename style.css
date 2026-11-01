@@ -2999,16 +2999,16 @@ body.custom-select-open {
 }
 
 .servicio-motor-icon {
-    width: 43px;
-    height: 43px;
-    min-width: 43px;
+    width: 32px;
+    height: 32px;
+    min-width: 32px;
     display: flex;
     align-items: center;
     justify-content: center;
     border-radius: 12px;
     color: #ffffff;
     background: linear-gradient(135deg, #0284c7, #0369a1);
-    font-size: 19px;
+    font-size: 16px;
     box-shadow: 0 3px 7px rgba(2, 132, 199, .20);
 }
 
@@ -3026,7 +3026,7 @@ body.custom-select-open {
     flex-wrap: wrap;
     gap: 6px;
     color: #0f172a;
-    font-size: .88rem;
+    font-size: .68rem;
     font-weight: 800;
 }
 
@@ -3035,14 +3035,14 @@ body.custom-select-open {
     border-radius: 5px;
     background: #e0f2fe;
     color: #0284c7;
-    font-size: .57rem;
+    font-size: .37rem;
     font-weight: 800;
     letter-spacing: .4px;
 }
 
 .servicio-motor-description {
     color: #64748b;
-    font-size: .68rem;
+    font-size: .48rem;
     font-weight: 600;
     line-height: 1.3;
 }
