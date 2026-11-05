@@ -1059,6 +1059,7 @@ function marcarFueraDePista(id) {
     const r = appData.registros.find(x => x.id === id);
     if (r) {
         r.pista = 'Fuera';
+        r.salidaPistaAt = Date.now();
         const v = appData.vehiculosRegistry[r.auto];
         if (v) { const h = v.historialVisitas.find(x => x.id === r.id); if (h) h.pista = 'Fuera'; }
         saveData();
@@ -1256,7 +1257,7 @@ function saveAutoRecord(e) {
     const propina = parseFloat(document.getElementById('recordPropina')?.value) || 0;
     const fp = document.getElementById('recordFormaPago')?.value || 'Efectivo';
     const ep = document.getElementById('recordEstadoPago')?.value || 'PENDIENTE';
-    const fh = new Date().toLocaleDateString(), hr = new Date().toLocaleTimeString([],{hour:'2-digit',minute:'2-digit'});
+    const ahoraRegistro = new Date(); const registroAt = ahoraRegistro.getTime(); const fh = ahoraRegistro.toLocaleDateString(); const hr = ahoraRegistro.toLocaleTimeString([],{hour:'2-digit',minute:'2-digit'});
 
     const propietarioFinal = clienteAsociado ? clienteAsociado.name : prop;
     const telefonoFinal = clienteAsociado ? clienteTelefono : tel;
@@ -1267,7 +1268,7 @@ function saveAutoRecord(e) {
         Object.assign(appData.vehiculosRegistry[placa], { marca,modelo,color,tipoVehiculo:tipo,propietario:propietarioFinal,telefono:telefonoFinal,frecuente:frec,observaciones:obs });
     }
 
-    const visita = { fecha:fh, timestamp:hr, servicio:srvStr, serviciosArray:arr, monto, descuento, clienteId, clienteNombre, propina, lavador:lav, pista:pistaVal, formaPago:fp, estadoPago:ep };
+    const visita = { fecha:fh, timestamp:hr, registroAt, servicio:srvStr, serviciosArray:arr, monto, descuento, clienteId, clienteNombre, propina, lavador:lav, pista:pistaVal, formaPago:fp, estadoPago:ep };
 
     if (editId !== '') {
         const idx = appData.registros.findIndex(r => r.id === editId);
@@ -1309,7 +1310,7 @@ function saveAutoRecord(e) {
     } else {
         const nid = 'rec_' + Date.now(); 
         visita.id = nid;
-        appData.registros.unshift({ id:nid, auto:placa, tipoVehiculo:tipo, clienteName:clienteNombre || prop, clienteId, clienteNombre, telefono:clienteTelefono || tel, servicio:srvStr, serviciosArray:arr, lavador:lav, pista:pistaVal, monto, descuento, propina, formaPago:fp, estadoPago:ep, fecha:fh, timestamp:hr });
+        appData.registros.unshift({ id:nid, auto:placa, tipoVehiculo:tipo, clienteName:clienteNombre || prop, clienteId, clienteNombre, telefono:clienteTelefono || tel, servicio:srvStr, serviciosArray:arr, lavador:lav, pista:pistaVal, monto, descuento, propina, formaPago:fp, estadoPago:ep, fecha:fh, timestamp:hr, registroAt });
         appData.vehiculosRegistry[placa].historialVisitas.push(visita);
     }
 
@@ -1674,7 +1675,7 @@ function registrarPagoModal(id, metodo) {
     r.formaPago = metodo;
 
     // AQUÍ SE GUARDA LA HORA EXACTA DEL CLIC EN HORACOBRO
-    r.horaCobro = new Date().toLocaleTimeString([], { hour: '2-digit', minute: '2-digit' });
+    r.horaCobro = new Date().toLocaleTimeString([], { hour: '2-digit', minute: '2-digit' }); r.horaCobroAt = Date.now(); r.horaCobroAt = Date.now();
 
     closePaymentModal();
     saveData();
@@ -1825,50 +1826,41 @@ function renderResumenLavadoresHome() {
     let hayActivos = false;
 
     appData.lavadores.forEach(lavador => {
-        const registrosLavador = appData.registros.filter(r => r.lavador === lavador);
-
+        const registrosLavador = (appData.registros || []).filter(r => r.lavador === lavador);
         let autosPagados = 0;
         let autosPendientes = 0;
         let totalBrutoLavador = 0;
 
         registrosLavador.forEach(r => {
-            const monto = parseFloat(r.monto) || 0;
-            totalBrutoLavador += monto;
-
-            if (r.estadoPago === 'PAGADO') {
-                autosPagados++;
-            } else {
-                autosPendientes++;
-            }
+            totalBrutoLavador += parseFloat(r.monto) || 0;
+            if (r.estadoPago === 'PAGADO') autosPagados++;
+            else autosPendientes++;
         });
 
         const totalAutos = autosPagados + autosPendientes;
         if (totalAutos === 0) return;
-
         hayActivos = true;
 
-        // CÁLCULO LIMPIO:
-        // Se calcula únicamente la comisión que le corresponde por los lavados.
-        // La propina no entra a la deuda pendiente porque ya se le entregó en mano al instante.
-        let gananciaLavador = Math.ceil(totalBrutoLavador / 2);
-
+        const gananciaLavador = Math.ceil(totalBrutoLavador / 2);
         html += `
-            <div class="lavador-payout-item">
-                <div class="lavador-payout-info">
-                    <div class="lavador-name-title">
+            <button type="button" class="lavador-payout-item home-lavador-clickable"
+                data-home-lavador="${escapeHtml(lavador)}"
+                aria-label="Ver autos lavados por ${escapeHtml(lavador)}">
+                <span class="lavador-payout-info">
+                    <span class="lavador-name-title">
                         <i class="fa-solid fa-user-check"></i>
-                        <span>${lavador}</span>
-                    </div>
-                    <div class="lavador-stats-text">
+                        <span>${escapeHtml(lavador)}</span>
+                        <i class="fa-solid fa-chevron-right home-lavador-chevron"></i>
+                    </span>
+                    <span class="lavador-stats-text">
                         ${totalAutos} auto${totalAutos === 1 ? '' : 's'} - ${autosPendientes} pendiente${autosPendientes === 1 ? '' : 's'}
-                    </div>
-                </div>
-                <div class="lavador-payout-right">
-                    <!-- MUESTRA ÚNICAMENTE LA COMISIÓN LIMPIA ($3.00) -->
+                    </span>
+                </span>
+                <span class="lavador-payout-right">
                     <span class="lavador-payout-amount">$${gananciaLavador.toFixed(2)}</span>
-                    <div class="lavador-bruto-text">Total: $${totalBrutoLavador.toFixed(2)}</div>
-                </div>
-            </div>
+                    <span class="lavador-bruto-text">Total: $${totalBrutoLavador.toFixed(2)}</span>
+                </span>
+            </button>
         `;
     });
 
@@ -1876,9 +1868,126 @@ function renderResumenLavadoresHome() {
         contenedor.innerHTML = '<p class="lavador-empty-msg">No hay registros de autos lavados hoy</p>';
         return;
     }
-
     contenedor.innerHTML = html;
 }
+
+/* ==================================================
+   DETALLE DE AUTOS POR LAVADOR - VISTA INICIO
+   Usa timestamp/hora de registro y horaCobro ya guardados.
+   La duración mostrada es el tiempo transcurrido hasta el cobro.
+   ================================================== */
+function formatoDuracionEntreHoras(registroAt, cobroAt) {
+    const inicio = Number(registroAt);
+    const fin = Number(cobroAt);
+
+    if (!Number.isFinite(inicio) || !Number.isFinite(fin) ||
+        inicio <= 0 || fin < inicio) {
+        return '—';
+    }
+
+    const minutos = Math.floor((fin - inicio) / 60000);
+
+    if (minutos < 60) {
+        return `${minutos} min`;
+    }
+
+    const horas = Math.floor(minutos / 60);
+    const restantes = minutos % 60;
+
+    return restantes > 0
+        ? `${horas} h ${restantes} min`
+        : `${horas} h`;
+}
+
+function abrirDetalleAutosLavador(nombreLavador) {
+    const lavador = String(nombreLavador || '');
+    const registros = (appData.registros || [])
+        .filter(r => (r.lavador || 'Sin Asignar') === lavador)
+        .slice()
+        .sort((a, b) => {
+            const fa = String(a.fecha || '') + ' ' + String(a.timestamp || a.horaRegistro || '');
+            const fb = String(b.fecha || '') + ' ' + String(b.timestamp || b.horaRegistro || '');
+            return fb.localeCompare(fa);
+        });
+
+    let modal = document.getElementById('homeLavadorDetalleModal');
+    if (!modal) {
+        modal = document.createElement('div');
+        modal.id = 'homeLavadorDetalleModal';
+        modal.className = 'home-lavador-modal';
+        modal.innerHTML = `
+            <section class="home-lavador-dialog" role="dialog" aria-modal="true" aria-labelledby="homeLavadorModalTitle">
+                <header class="home-lavador-modal-header">
+                    <div>
+                        <span class="home-lavador-kicker"><i class="fa-solid fa-car-side"></i> ACTIVIDAD DEL LAVADOR</span>
+                        <h3 id="homeLavadorModalTitle"></h3>
+                        <p id="homeLavadorModalCount"></p>
+                    </div>
+                    <button type="button" class="home-lavador-close" aria-label="Cerrar" data-close-home-lavador>&times;</button>
+                </header>
+                <div class="home-lavador-list" id="homeLavadorModalList"></div>
+            </section>`;
+        document.body.appendChild(modal);
+
+        modal.addEventListener('click', ev => {
+            if (ev.target === modal || ev.target.closest('[data-close-home-lavador]')) {
+                modal.classList.remove('open');
+            }
+        });
+    }
+
+    modal.querySelector('#homeLavadorModalTitle').textContent = lavador;
+    modal.querySelector('#homeLavadorModalCount').textContent =
+        `${registros.length} auto${registros.length === 1 ? '' : 's'} registrados`;
+
+    const lista = modal.querySelector('#homeLavadorModalList');
+    if (!registros.length) {
+        lista.innerHTML = '<div class="home-lavador-empty">No hay autos registrados para este lavador.</div>';
+    } else {
+        lista.innerHTML = registros.map(r => {
+            const placa = r.placa || r.auto || 'Sin placa';
+            const tipo = r.tipoVehiculo || r.vehiculoTipo || 'Vehículo';
+            const servicio = r.servicio || r.tipoLavado || 'Lavado';
+            const monto = Math.max(0, parseFloat(r.monto) || 0);
+            const descuento = Math.max(0, parseFloat(r.descuento) || 0);
+            const horaRegistro = r.horaRegistro || r.timestamp || r.hora || '—';
+            const horaCobro = r.horaCobro || 'Pendiente';
+            const pagado = r.estadoPago === 'PAGADO';
+            const duracion = pagado
+                ? formatoDuracionEntreHoras(r.registroAt, r.horaCobroAt)
+                : 'En espera de cobro';
+            return `
+                <article class="home-lavador-auto">
+                    <div class="home-lavador-auto-top">
+                        <div class="home-lavador-car">
+                            <strong>${escapeHtml(placa)}</strong>
+                            <small>${escapeHtml(tipo)} · ${escapeHtml(servicio)}</small>
+                        </div>
+                        <strong class="home-lavador-price">$${monto.toFixed(2)}</strong>
+                    </div>
+                    <div class="home-lavador-meta">
+                        <span><i class="fa-regular fa-clock"></i> Registro <b>${escapeHtml(horaRegistro)}</b></span>
+                        <span><i class="fa-solid fa-cash-register"></i> Cobro <b>${escapeHtml(horaCobro)}</b></span>
+                        <span><i class="fa-solid fa-stopwatch"></i> Tiempo <b>${escapeHtml(duracion)}</b></span>
+                        <span><i class="fa-solid fa-location-dot"></i> ${escapeHtml(r.pista ? 'Pista ' + r.pista : 'Sin pista')}</span>
+                    </div>
+                    <div class="home-lavador-status ${pagado ? 'is-paid' : 'is-pending'}">
+                        <i class="fa-solid ${pagado ? 'fa-circle-check' : 'fa-hourglass-half'}"></i>
+                        ${pagado ? 'Cobrado' : 'Pendiente de cobro'}
+                        ${descuento > 0 ? `<span>Descuento -$${descuento.toFixed(2)}</span>` : ''}
+                    </div>
+                </article>`;
+        }).join('');
+    }
+    modal.classList.add('open');
+}
+
+// Delegación: el resumen se vuelve a dibujar con updateUI(), por eso el clic
+// se escucha en el contenedor estable y no en cada tarjeta individual.
+document.addEventListener('click', function(ev) {
+    const item = ev.target.closest('.home-lavador-clickable');
+    if (item) abrirDetalleAutosLavador(item.dataset.homeLavador || '');
+});
 
 /* ==================================================
    SECCIÓN: ACTUALIZACIÓN DE INTERFAZ GENERAL (UI)
