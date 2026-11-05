@@ -3123,3 +3123,199 @@ body.custom-select-open {
     border-color: #38bdf8;
     box-shadow: 0 3px 12px rgba(2, 132, 199, .12);
 }
+
+/* ==================================================
+   DETALLE COMPACTO DE AUTOS POR LAVADOR - HOME
+   ================================================== */
+.home-lavador-clickable {
+    width: 100%;
+    text-align: left;
+    font: inherit;
+    color: inherit;
+    cursor: pointer;
+    transition: transform .16s ease, background .16s ease, border-color .16s ease;
+}
+.home-lavador-clickable:active {
+    transform: scale(.985);
+    background: #eff6ff;
+}
+.home-lavador-clickable .home-lavador-chevron {
+    margin-left: 2px;
+    color: #94a3b8;
+    font-size: .68rem;
+}
+.home-lavador-modal {
+    position: fixed;
+    inset: 0;
+    z-index: 12500;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    padding: 14px;
+    background: rgba(15, 23, 42, .62);
+    backdrop-filter: blur(5px);
+    opacity: 0;
+    pointer-events: none;
+    transition: opacity .22s ease;
+}
+.home-lavador-modal.open {
+    opacity: 1;
+    pointer-events: auto;
+}
+.home-lavador-dialog {
+    width: 100%;
+    max-width: 430px;
+    max-height: min(82vh, 720px);
+    display: flex;
+    flex-direction: column;
+    overflow: hidden;
+    background: #fff;
+    border: 1px solid #e2e8f0;
+    border-radius: 19px;
+    box-shadow: 0 18px 50px rgba(15, 23, 42, .24);
+    transform: translateY(12px) scale(.985);
+    transition: transform .22s ease;
+}
+.home-lavador-modal.open .home-lavador-dialog {
+    transform: translateY(0) scale(1);
+}
+.home-lavador-modal-header {
+    position: relative;
+    display: flex;
+    align-items: flex-start;
+    justify-content: space-between;
+    gap: 12px;
+    padding: 17px 17px 13px;
+    color: #fff;
+    background: linear-gradient(135deg, #0f172a, #1e3a5f);
+    border: 0;
+    box-shadow: none;
+}
+.home-lavador-kicker {
+    display: block;
+    margin-bottom: 5px;
+    color: #7dd3fc;
+    font-size: .59rem;
+    font-weight: 800;
+    letter-spacing: .75px;
+}
+.home-lavador-modal-header h3 {
+    margin: 0;
+    color: #fff;
+    font-size: 1rem;
+    font-weight: 800;
+    line-height: 1.25;
+}
+.home-lavador-modal-header p {
+    margin: 3px 0 0;
+    color: #cbd5e1;
+    font-size: .68rem;
+    font-weight: 600;
+}
+.home-lavador-close {
+    flex: 0 0 30px;
+    width: 30px;
+    height: 30px;
+    padding: 0 0 8px 0;
+    border: 1px solid rgba(255,255,255,.2);
+    border-radius: 9px;
+    background: rgba(255,255,255,.1);
+    color: #fff;
+    font-size: 1.35rem;
+    line-height: 1;
+    cursor: pointer;
+}
+.home-lavador-list {
+    overflow-y: auto;
+    padding: 10px;
+    overscroll-behavior: contain;
+}
+.home-lavador-auto {
+    padding: 11px 12px 9px;
+    margin-bottom: 8px;
+    background: #f8fafc;
+    border: 1px solid #e8eef5;
+    border-radius: 12px;
+}
+.home-lavador-auto:last-child { margin-bottom: 0; }
+.home-lavador-auto-top {
+    display: flex;
+    align-items: flex-start;
+    justify-content: space-between;
+    gap: 10px;
+}
+.home-lavador-car {
+    min-width: 0;
+    display: flex;
+    flex-direction: column;
+    gap: 2px;
+}
+.home-lavador-car strong {
+    color: #0f172a;
+    font-size: .82rem;
+    font-weight: 800;
+    letter-spacing: .2px;
+}
+.home-lavador-car small {
+    color: #64748b;
+    font-size: .64rem;
+    line-height: 1.35;
+}
+.home-lavador-price {
+    flex-shrink: 0;
+    color: #0284c7;
+    font-size: .86rem;
+    font-weight: 800;
+}
+.home-lavador-meta {
+    display: grid;
+    grid-template-columns: 1fr 1fr;
+    gap: 5px 9px;
+    margin-top: 9px;
+    padding-top: 8px;
+    border-top: 1px solid #e8eef5;
+}
+.home-lavador-meta span {
+    min-width: 0;
+    display: flex;
+    align-items: center;
+    gap: 4px;
+    color: #64748b;
+    font-size: .61rem;
+    line-height: 1.35;
+}
+.home-lavador-meta i {
+    flex: 0 0 auto;
+    color: #0284c7;
+    font-size: .62rem;
+}
+.home-lavador-meta b {
+    color: #334155;
+    font-size: .62rem;
+    font-weight: 800;
+}
+.home-lavador-status {
+    display: flex;
+    align-items: center;
+    gap: 5px;
+    margin-top: 8px;
+    font-size: .61rem;
+    font-weight: 800;
+}
+.home-lavador-status.is-paid { color: #059669; }
+.home-lavador-status.is-pending { color: #d97706; }
+.home-lavador-status span {
+    margin-left: auto;
+    color: #dc2626;
+    font-size: .59rem;
+}
+.home-lavador-empty {
+    padding: 28px 12px;
+    color: #94a3b8;
+    text-align: center;
+    font-size: .75rem;
+}
+@media (max-width: 360px) {
+    .home-lavador-meta { grid-template-columns: 1fr; }
+    .home-lavador-dialog { max-height: 86vh; }
+}
